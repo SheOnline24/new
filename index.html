@@ -1,12 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Redirecting…</title>
-<script type="text/javascript">
-  window.location.replace("https://tone.affomelody.com/click?pid=6350&offer_id=25");
-</script>
+  <meta charset="UTF-8">
+  <title>Redirect</title>
+  <script>
+    // Список партнёрских ссылок
+    const links = [
+      "https://tone.affomelody.com/click?pid=6350&offer_id=25",
+      "https://rdlwl.llovellydates.com/?utm_source=da57dc555e50572d&ban=tg&j1=1&s1=44438&s2=2224799"
+    ];
+
+    // Получаем индекс последней перехода из localStorage
+    let index = localStorage.getItem('lastPartner') || 0;
+
+    // Берём ссылку для текущего перехода
+    const nextLink = links[index];
+
+    // Обновляем индекс для следующего перехода
+    index = (parseInt(index) + 1) % links.length;
+    localStorage.setItem('lastPartner', index);
+
+    // Перенаправление
+    window.location.href = nextLink;
+  </script>
 </head>
 <body>
+  <p>Перенаправление…</p>
 </body>
 </html>
