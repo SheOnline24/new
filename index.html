@@ -74,18 +74,14 @@ function sourceTextAdjust(){
   }
 }
 
-// --- умный выбор оффера с AI подстройкой
+// --- умный выбор оффера
 function chooseOfferAI(){
   let stats=getStats();
   let d=stats.d||1, c=stats.c||1, total=d+c;
-  
-  // динамическое усиление по активности пользователя
   let elapsed=(Date.now()-startTime)/1000;
   let actFactor = interactionCount>3 ? 0.1 : 0.3;
-  
   let dWeight=0.6 + (d/total)*0.4 - actFactor;
   let cWeight=0.4 + (c/total)*0.4 + actFactor;
-  
   let rand=Math.random();
   if(rand<dWeight/(dWeight+cWeight)){stats.d=d+1; saveStats(stats); return DATING;}
   else{stats.c=c+1; saveStats(stats); return CASINO;}
@@ -100,25 +96,24 @@ function setupReturnDojimAI(){
   btn.innerText=texts[lang].returnBtn;
   btn.onclick=()=>{window.location.href=DATING;};
 
-  // AI баннер казино
   let stats=getStats(); let d=stats.d||1, c=stats.c||1;
   let probability = c/(c+d);
   let elapsed=(Date.now()-startTime)/1000;
   if(probability>0.25 && interactionCount>0 && elapsed>3){ popup.style.display="block"; }
-
-  localStorage.setItem("return_setup","1");
 }
 
 // --- отслеживание активности
 ["mousemove","touchstart","click","scroll"].forEach(ev=>{document.addEventListener(ev,()=>{active=true; interactionCount++;});});
 
-// --- проверка возврата
-function handleReturnAI(){if(localStorage.getItem("tg_clicked") && !localStorage.getItem("return_setup")) setupReturnDojimAI();}
+// --- обработка возврата
+function handleReturnAI(){
+  if(localStorage.getItem("tg_clicked")){
+    setupReturnDojimAI();
+  }
+}
 
-// --- основной прогрев и логика AI
-if(localStorage.getItem("tg_clicked") && !localStorage.getItem("return_setup")){
-  setupReturnDojimAI();
-} else {
+// --- основной прогрев и логика
+function initAI(){
   sourceTextAdjust();
   let i=0;
   function typeChat(){if(i<texts[lang].chat.length){chat.innerText=texts[lang].chat[i];i++;setTimeout(typeChat,1500);}}
@@ -130,17 +125,18 @@ if(localStorage.getItem("tg_clicked") && !localStorage.getItem("return_setup")){
     window.location.href=TG;
   };
 
-  // авто-редирект если не нажал кнопку
   setTimeout(()=>{
     if(!redirected) window.location.replace(chooseOfferAI());
   },6000+Math.random()*3000);
 }
 
-// --- ловим возврат через back/Telegram
+// --- события возврата
 window.addEventListener("pageshow", handleReturnAI);
 document.addEventListener("visibilitychange", handleReturnAI);
-window.addEventListener("popstate",()=>{if(active) popup.style.display="block";});
-window.addEventListener("beforeunload",()=>{if(active) popup.style.display="block";});
+window.addEventListener("popstate", handleReturnAI);
+window.addEventListener("beforeunload", handleReturnAI);
+
+initAI();
 </script>
 </body>
 </html>
