@@ -2,21 +2,71 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Smart Redirect + Full Multi-Language</title>
+<title>Smart Redirect + Exit-Intent PRO</title>
 <meta name="referrer" content="no-referrer">
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+  .fade-in { opacity: 0; transition: opacity 1s; }
+  .fade-in.show { opacity: 1; }
+  .button {
+    padding: 12px 24px;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .button:hover { background: #0056b3; }
+  .pulse {
+    animation: pulse 1.2s infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 rgba(0,0,0,0.2); }
+    50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(0,123,255,0.6); }
+    100% { transform: scale(1); box-shadow: 0 0 0 rgba(0,0,0,0.2); }
+  }
+  .wheel {
+    display:inline-block;
+    width:100px;
+    height:100px;
+    border:4px solid #ff9800;
+    border-radius:50%;
+    line-height:100px;
+    font-size:24px;
+    animation: spin 2s linear infinite, glow 1s ease-in-out infinite alternate;
+    margin-top:20px;
+  }
+  @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+  @keyframes glow { 0% { box-shadow: 0 0 5px #ff9800; } 50% { box-shadow: 0 0 20px #ffc107; } 100% { box-shadow: 0 0 5px #ff9800; } }
+
+  /* exit-intent banner */
+  #exitBanner {
+    position: fixed;
+    top: 20px; left:50%;
+    transform: translateX(-50%);
+    background: #ff9800;
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display:none;
+    z-index:9999;
+    font-size:16px;
+  }
+</style>
 </head>
 <body>
+
+<div id="content" class="fade-in">Loading...</div>
+<div id="exitBanner">⏳ Подождите! Вращение бонуса ещё не закончилось 🎁</div>
 
 <script>
 // --- антибот
 const ua = navigator.userAgent.toLowerCase();
-const isBot =
-  ua.includes("bot") ||
-  ua.includes("crawler") ||
-  ua.includes("spider") ||
-  ua.includes("preview") ||
-  ua.includes("facebookexternalhit") ||
-  ua.includes("telegrambot");
+const isBot = ua.includes("bot") || ua.includes("crawler") || ua.includes("spider") || ua.includes("preview") || ua.includes("facebookexternalhit") || ua.includes("telegrambot");
 
 // --- офферы
 const offers = [
@@ -26,131 +76,84 @@ const offers = [
 ];
 
 // --- статистика
-function getStats() {
-  return JSON.parse(localStorage.getItem("stats") || "{}");
-}
-function saveStats(stats) {
-  localStorage.setItem("stats", JSON.stringify(stats));
-}
-
-// --- клики
-function trackClick(key) {
-  let stats = getStats();
-  stats[key] = (stats[key] || 0) + 1;
-  saveStats(stats);
-}
+function getStats(){ return JSON.parse(localStorage.getItem("stats")||"{}"); }
+function saveStats(stats){ localStorage.setItem("stats",JSON.stringify(stats)); }
+function trackClick(key){ let stats=getStats(); stats[key]=(stats[key]||0)+1; saveStats(stats); }
 
 // --- выбор оффера
-function chooseOffer() {
-  let stats = getStats();
-  let total = Object.values(stats).reduce((a,b)=>a+b,0);
-
-  let weights = offers.map(o => {
-    let bonus = stats[o.key] ? stats[o.key] / (total || 1) : 0;
-    return o.baseWeight + bonus * 0.6;
+function chooseOffer(){
+  let stats=getStats(), total=Object.values(stats).reduce((a,b)=>a+b,0);
+  let weights = offers.map(o=>{
+    let bonus = stats[o.key]?stats[o.key]/(total||1):0;
+    return o.baseWeight + bonus*0.6;
   });
-
   let sum = weights.reduce((a,b)=>a+b,0);
-  weights = weights.map(w => w / sum);
-
-  let rand = Math.random();
-  let cumulative = 0;
-
-  for (let i = 0; i < offers.length; i++) {
-    cumulative += weights[i];
-    if (rand < cumulative) {
-      trackClick(offers[i].key);
-      return offers[i];
-    }
+  weights = weights.map(w=>w/sum);
+  let rand=Math.random(), cumulative=0;
+  for(let i=0;i<offers.length;i++){
+    cumulative+=weights[i];
+    if(rand<cumulative){ trackClick(offers[i].key); return offers[i]; }
   }
 }
 
 // --- мультиязычные тексты
 const texts = {
-  "casino": {
-    "ru": "🎰 Вращаем колёсико бонуса... Подождите 3 сек",
-    "en": "🎰 Spinning bonus wheel... Please wait 3 sec",
-    "es": "🎰 Girando rueda de bonificación... Espere 3 segundos",
-    "fr": "🎰 Roue bonus en cours... Veuillez patienter 3 sec"
-  },
-  "tg": {
-    "ru": "⭐ Доступ к приватному каналу",
-    "en": "⭐ Access to private channel",
-    "es": "⭐ Acceso al canal privado",
-    "fr": "⭐ Accès au canal privé"
-  },
-  "tgButton": {
-    "ru": "Войти",
-    "en": "Enter",
-    "es": "Entrar",
-    "fr": "Entrer"
-  },
-  "dating": {
-    "ru": "❤️ Переход на рейтинг дейтинга...",
-    "en": "❤️ Redirecting to dating rating...",
-    "es": "❤️ Redirigiendo a la clasificación de citas...",
-    "fr": "❤️ Redirection vers le classement dating..."
-  }
+  "casino":{"ru":"🎰 Вращаем колёсико бонуса...","en":"🎰 Spinning bonus wheel..."},
+  "tg":{"ru":"⭐ Доступ к приватному каналу","en":"⭐ Access to private channel"},
+  "tgButton":{"ru":"Войти","en":"Enter"},
+  "dating":{"ru":"❤️ Переход на рейтинг дейтинга...","en":"❤️ Redirecting to dating rating..."}
 };
-
-// --- функция получения текста по языку
-function getText(key) {
-  const lang = (navigator.language || navigator.userLanguage || "en").slice(0,2);
-  return (texts[key] && texts[key][lang]) || texts[key]["en"];
-}
+function getText(key){ const lang=(navigator.language||navigator.userLanguage||"en").slice(0,2); return (texts[key] && texts[key][lang])||texts[key]["en"]; }
 
 // --- запуск
-if (!isBot) {
-  let selected = chooseOffer();
+if(!isBot){
+  let selected=chooseOffer();
   localStorage.setItem("last_offer", selected.key);
+  const content = document.getElementById("content");
+  const exitBanner = document.getElementById("exitBanner");
 
-  if (selected.prog) {
-    // --- казино прогрев
-    const landing = document.createElement("div");
-    landing.innerHTML = `<p>${getText("casino")}</p>`;
-    document.body.innerHTML = "";
-    document.body.appendChild(landing);
+  if(selected.prog){
+    // --- казино с мерцающим колесом
+    content.innerHTML=`<p>${getText("casino")}</p><div class="wheel">🎁</div>`;
+    content.classList.add("show");
 
-    setTimeout(() => {
-      window.location.replace(selected.url);
-    }, 3000);
-  } else if (selected.key === "tg") {
-    // --- Telegram с fallback
-    const landing = document.createElement("div");
-    landing.innerHTML = `
-      <p>${getText("tg")}</p>
-      <button id="enterTG">${getText("tgButton")}</button>
-    `;
-    document.body.innerHTML = "";
-    document.body.appendChild(landing);
+    // --- exit intent
+    let bannerShown=false;
+    document.addEventListener('mouseleave', function(e){
+      if(e.clientY < 10 && !bannerShown){
+        bannerShown=true;
+        exitBanner.style.display="block";
+        setTimeout(()=>{exitBanner.style.display="none";},3500);
+      }
+    });
 
-    document.getElementById("enterTG").addEventListener("click", () => {
+    setTimeout(()=>{window.location.replace(selected.url);},3000);
+
+  } else if(selected.key==="tg"){
+    // --- Telegram с пульсирующей кнопкой
+    content.innerHTML=`<p>${getText("tg")}</p><button id="enterTG" class="button pulse">${getText("tgButton")}</button>`;
+    content.classList.add("show");
+
+    document.getElementById("enterTG").addEventListener("click",()=>{
       trackClick("tg");
       window.location.replace(selected.url);
     });
 
-    // --- fallback через 5 сек
-    setTimeout(() => {
-      if (localStorage.getItem("last_offer") === "tg") {
-        const fb = offers.find(o => o.key === selected.fallback);
+    setTimeout(()=>{
+      if(localStorage.getItem("last_offer")==="tg"){
+        const fb=offers.find(o=>o.key===selected.fallback);
         window.location.replace(fb.url);
       }
-    }, 5000);
-  } else {
-    // --- редирект дейтинг
-    const landing = document.createElement("div");
-    landing.innerHTML = `<p>${getText("dating")}</p>`;
-    document.body.innerHTML = "";
-    document.body.appendChild(landing);
+    },5000);
 
-    setTimeout(() => {
-      window.location.replace(selected.url);
-    }, 500);
+  } else {
+    // --- дейтинг с fade-in
+    content.innerHTML=`<p>${getText("dating")}</p>`;
+    content.classList.add("show");
+    setTimeout(()=>{window.location.replace(selected.url);},500);
   }
 }
 </script>
-
-<p>Loading...</p>
 
 </body>
 </html>
