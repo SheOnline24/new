@@ -89,18 +89,77 @@ const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 let lang=(navigator.language||"en").slice(0,2);
 
 const texts={
+
 en:{
 chat:["She is online...","Waiting for your message 💬"],
 btn:"Join Telegram",
 returnText:"No Stars? Try free 👇",
 returnBtn:"Continue"
 },
+
 ru:{
 chat:["Она онлайн...","Ждёт твоё сообщение 💬"],
 btn:"Перейти в Telegram",
 returnText:"Нет Stars? Попробуй бесплатно 👇",
 returnBtn:"Продолжить"
+},
+
+de:{
+chat:["Sie ist online...","Wartet auf deine Nachricht 💬"],
+btn:"Telegram öffnen",
+returnText:"Keine Stars? Kostenlos testen 👇",
+returnBtn:"Weiter"
+},
+
+fr:{
+chat:["Elle est en ligne...","Elle attend ton message 💬"],
+btn:"Ouvrir Telegram",
+returnText:"Pas de Stars? Essaye gratuit 👇",
+returnBtn:"Continuer"
+},
+
+es:{
+chat:["Ella está en línea...","Esperando tu mensaje 💬"],
+btn:"Unirse a Telegram",
+returnText:"¿No Stars? Prueba gratis 👇",
+returnBtn:"Continuar"
+},
+
+it:{
+chat:["È online...","Aspetta il tuo messaggio 💬"],
+btn:"Apri Telegram",
+returnText:"Niente Stars? Prova gratis 👇",
+returnBtn:"Continua"
+},
+
+pt:{
+chat:["Ela está online...","Esperando sua mensagem 💬"],
+btn:"Abrir Telegram",
+returnText:"Sem Stars? Teste grátis 👇",
+returnBtn:"Continuar"
+},
+
+nl:{
+chat:["Ze is online...","Wacht op je bericht 💬"],
+btn:"Open Telegram",
+returnText:"Geen Stars? Probeer gratis 👇",
+returnBtn:"Doorgaan"
+},
+
+pl:{
+chat:["Ona jest online...","Czeka na twoją wiadomość 💬"],
+btn:"Otwórz Telegram",
+returnText:"Brak Stars? Spróbuj za darmo 👇",
+returnBtn:"Kontynuuj"
+},
+
+tr:{
+chat:["O çevrimiçi...","Mesajını bekliyor 💬"],
+btn:"Telegram'a git",
+returnText:"Stars yok mu? Ücretsiz dene 👇",
+returnBtn:"Devam"
 }
+
 };
 
 if(!texts[lang]) lang="en";
@@ -119,7 +178,7 @@ function goCasino(){
 window.location.href=CASINO;
 }
 
-// показать страницу возврата
+// показать возврат
 function showReturn(){
 
 chat.innerText=texts[lang].returnText;
@@ -127,7 +186,11 @@ chat.innerText=texts[lang].returnText;
 btn.innerText=texts[lang].returnBtn;
 
 btn.onclick=()=>{
+
+localStorage.setItem("dating_clicked","1");
+
 window.location.href=DATING;
+
 };
 
 setTimeout(()=>{
@@ -136,7 +199,7 @@ popup.style.display="block";
 
 }
 
-// проверка возврата
+// проверка возврата из TG
 function checkReturn(){
 
 let tgTime=localStorage.getItem("tg_time");
@@ -146,27 +209,50 @@ if(tgTime){
 let diff=Date.now()-parseInt(tgTime);
 
 if(diff>2000){
+
 showReturn();
+
 localStorage.removeItem("tg_time");
-}
 
 }
 
 }
 
-// первый заход
+}
+
+// возврат после Dating
+function checkDatingReturn(){
+
+if(localStorage.getItem("dating_clicked")){
+
+popup.style.display="block";
+
+localStorage.removeItem("dating_clicked");
+
+}
+
+}
+
+// прогрев чат
 let i=0;
 
 function typeChat(){
+
 if(i<texts[lang].chat.length){
+
 chat.innerText=texts[lang].chat[i];
+
 i++;
+
 setTimeout(typeChat,1500);
+
 }
+
 }
 
 typeChat();
 
+// кнопка
 btn.innerText=texts[lang].btn;
 
 btn.onclick=()=>{
@@ -177,8 +263,14 @@ window.location.href=TG;
 
 };
 
-// проверяем возврат каждые 1 сек
+// авто редирект если человек тупит
+setTimeout(()=>{
+window.location.href=DATING;
+},15000);
+
+// проверки
 setInterval(checkReturn,1000);
+setInterval(checkDatingReturn,1000);
 
 </script>
 
