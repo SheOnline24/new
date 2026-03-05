@@ -5,9 +5,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta http-equiv="Cache-Control" content="no-store">
-<meta http-equiv="Pragma" content="no-cache">
-
 <title>Loading...</title>
 
 <style>
@@ -95,20 +92,7 @@ btn.classList.add(isIOS?"ios":"android");
 // состояние
 let stage=localStorage.getItem("stage")||"start";
 
-// функция dating
-function showDating(){
-
-chat.innerText=texts[lang].returnText;
-
-btn.innerText=texts[lang].returnBtn;
-
-btn.onclick=()=>{
-window.location.href=DATING;
-};
-
-}
-
-// первый экран
+// первая страница
 function showTelegram(){
 
 let i=0;
@@ -141,7 +125,24 @@ window.location.href=TG;
 
 }
 
-// управление историей
+// страница возврата
+function showDating(){
+
+chat.innerText=texts[lang].returnText;
+
+btn.innerText=texts[lang].returnBtn;
+
+btn.onclick=()=>{
+
+localStorage.setItem("stage","dating");
+
+window.open(DATING,"_blank"); // открываем в новой вкладке
+
+};
+
+}
+
+// history ловушка
 history.pushState({page:1},"");
 
 window.addEventListener("popstate",()=>{
@@ -150,17 +151,15 @@ let stage=localStorage.getItem("stage");
 
 if(stage==="tg"){
 
-localStorage.setItem("stage","dating");
-
 showDating();
+
+localStorage.setItem("stage","dating_wait");
 
 history.pushState({page:2},"");
 
 }
 
-else if(stage==="dating"){
-
-localStorage.setItem("stage","casino");
+else if(stage==="dating_wait"){
 
 window.location.href=CASINO;
 
@@ -169,14 +168,10 @@ window.location.href=CASINO;
 });
 
 // запуск
-if(stage==="dating"){
-
+if(stage==="dating_wait"){
 showDating();
-
 }else{
-
 showTelegram();
-
 }
 
 </script>
