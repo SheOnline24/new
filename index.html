@@ -3,12 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Norm Script Multilang</title>
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Online</title>
 <style>
 body { font-family: Arial, sans-serif; background: #111; color: #fff; text-align: center; padding: 50px; }
-button { padding: 14px 25px; font-size: 18px; background:#ff2e63; color:white; border:none; border-radius:8px; cursor:pointer; margin-top:20px; }
-#chat, #fakeTyping, #returnBlock, #casinoPopup { display: none; margin-top: 30px; }
+button { padding: 14px 25px; font-size: 18px; background:#ff2e63; color:white; border:none; border-radius:8px; cursor:pointer; margin:10px; }
+#chat, #fakeTyping, #returnBlock, #casinoPopup, #fakeChat { display: none; margin-top: 30px; }
 .fakeTyping { font-style: italic; color: #aaa; margin-top: 20px; }
+#fakeChat p { margin: 5px 0; }
 </style>
 </head>
 <body>
@@ -25,8 +29,14 @@ button { padding: 14px 25px; font-size: 18px; background:#ff2e63; color:white; b
 <div id="returnBlock">
   <h2></h2>
   <p></p>
-  <p></p>
   <button id="continueWithoutStars"></button>
+</div>
+
+<div id="fakeChat">
+  <p>💬 Hey...</p>
+  <p>💬 Are you there?</p>
+  <p>💬 I can't answer in Telegram...</p>
+  <button id="continueFromChat"></button>
 </div>
 
 <div id="casinoPopup">
@@ -35,91 +45,101 @@ button { padding: 14px 25px; font-size: 18px; background:#ff2e63; color:white; b
 </div>
 
 <script>
-// ===== Настройки офферов =====
+// ===== ТВОИ ОФФЕРЫ =====
 const DATING = "https://tone.affomelody.com/click?pid=6350&offer_id=25";
 const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
 
 // ===== Локализация =====
 const locales = {
-  en: { typing: "She is typing...", starRequired: "⭐ Telegram Stars required", noStars: "You don't have Stars", continue: "Continue without Stars" },
-  ru: { typing: "Она печатает...", starRequired: "⭐ Требуются Telegram Stars", noStars: "У тебя нет Stars", continue: "Продолжить без Stars" },
-  de: { typing: "Sie tippt...", starRequired: "⭐ Telegram Stars erforderlich", noStars: "Du hast keine Stars", continue: "Ohne Stars fortfahren" },
-  fr: { typing: "Elle écrit...", starRequired: "⭐ Telegram Stars requis", noStars: "Tu n'as pas de Stars", continue: "Continuer sans Stars" },
-  es: { typing: "Ella está escribiendo...", starRequired: "⭐ Se requieren Telegram Stars", noStars: "No tienes Stars", continue: "Continuar sin Stars" },
-  it: { typing: "Sta scrivendo...", starRequired: "⭐ Telegram Stars richiesti", noStars: "Non hai Stars", continue: "Continua senza Stars" },
-  nl: { typing: "Ze is aan het typen...", starRequired: "⭐ Telegram Stars vereist", noStars: "Je hebt geen Stars", continue: "Doorgaan zonder Stars" },
-  pl: { typing: "Ona pisze...", starRequired: "⭐ Wymagane Telegram Stars", noStars: "Nie masz Stars", continue: "Kontynuuj bez Stars" },
-  pt: { typing: "Ela está digitando...", starRequired: "⭐ Telegram Stars necessários", noStars: "Você não tem Stars", continue: "Continuar sem Stars" },
-  tr: { typing: "O yazıyor...", starRequired: "⭐ Telegram Stars gerekli", noStars: "Stars yok", continue: "Stars olmadan devam et" }
+  en: { typing: "She is typing...", starRequired: "⭐ Telegram Stars required", noStars: "You don't have Stars", continue: "Continue without Stars", continueChat: "Continue chat" },
+  ru: { typing: "Она печатает...", starRequired: "⭐ Требуются Telegram Stars", noStars: "У тебя нет Stars", continue: "Продолжить без Stars", continueChat: "Продолжить чат" },
+  de: { typing: "Sie tippt...", starRequired: "⭐ Telegram Stars erforderlich", noStars: "Du hast keine Stars", continue: "Ohne Stars fortfahren", continueChat: "Chat fortsetzen" },
+  fr: { typing: "Elle écrit...", starRequired: "⭐ Telegram Stars requis", noStars: "Tu n'as pas de Stars", continue: "Continuer sans Stars", continueChat: "Continuer chat" },
+  es: { typing: "Ella está escribiendo...", starRequired: "⭐ Se requieren Telegram Stars", noStars: "No tienes Stars", continue: "Continuar sin Stars", continueChat: "Continuar chat" },
+  it: { typing: "Sta scrivendo...", starRequired: "⭐ Telegram Stars richiesti", noStars: "Non hai Stars", continue: "Continua senza Stars", continueChat: "Continua chat" },
+  nl: { typing: "Ze is aan het typen...", starRequired: "⭐ Telegram Stars vereist", noStars: "Je hebt geen Stars", continue: "Doorgaan zonder Stars", continueChat: "Chat voortzetten" }
 };
-
-// ===== Определяем язык пользователя =====
 const lang = navigator.language.split('-')[0];
-const text = locales[lang] || locales['en'];
+const text = locales[lang] || locales.en;
 
 // ===== Подставляем тексты =====
 document.getElementById("fakeTyping").innerText = text.typing;
 const returnBlock = document.getElementById("returnBlock");
 returnBlock.querySelector("h2").innerText = text.starRequired;
-returnBlock.querySelector("p:nth-of-type(1)").innerText = text.noStars;
+returnBlock.querySelector("p").innerText = text.noStars;
 document.getElementById("continueWithoutStars").innerText = text.continue;
+document.getElementById("continueFromChat").innerText = text.continueChat;
 
-// ===== Telegram переход =====
+// ===== TELEGRAM =====
 let tgTime = null;
-document.getElementById("chat").style.display = "block";
+const chat = document.getElementById("chat");
+chat.style.display = "block";
+
 document.getElementById("joinTelegram").addEventListener("click", () => {
   tgTime = Date.now();
   localStorage.setItem("tg_time", tgTime);
-  window.location.href = "https://t.me/+NFHjJC5nOndlZjky"; // Telegram группа
+  window.location.href = "https://t.me/+NFHjJC5nOndlZjky";
 });
 
-// ===== Возврат на страницу =====
+// ===== ПРОВЕРКА ВОЗВРАТА =====
 function checkReturn() {
   const storedTime = localStorage.getItem("tg_time");
-  if(storedTime){
-    const diff = Date.now() - storedTime;
-    if(diff > 2000) { showReturnBlock(); }
+  if(storedTime && Date.now() - storedTime > 1200){
+    showReturnBlock();
+    localStorage.removeItem("tg_time");
   }
 }
 
-document.addEventListener("visibilitychange", () => {
-  if(!document.hidden) checkReturn();
-});
+window.addEventListener("load", checkReturn);
+document.addEventListener("visibilitychange", () => { if(!document.hidden) setTimeout(checkReturn,300); });
+window.addEventListener("focus", () => { setTimeout(checkReturn,300); });
+setInterval(checkReturn,2000);
 
-// ===== Показ блока после возврата =====
-function showReturnBlock() {
-  document.getElementById("chat").style.display = "none";
+// ===== Блок возврата =====
+function showReturnBlock(){
+  chat.style.display = "none";
   const typing = document.getElementById("fakeTyping");
   typing.style.display = "block";
   setTimeout(() => {
-    typing.innerText = text.typing;
-    setTimeout(() => {
-      typing.style.display = "none";
-      returnBlock.style.display = "block";
-    }, 2000);
-  }, 2000);
+    typing.style.display = "none";
+    returnBlock.style.display = "block";
+  },2000);
 }
 
-// ===== Кнопка Continue without Stars =====
+// ===== Continue without Stars =====
 document.getElementById("continueWithoutStars").addEventListener("click", () => {
-  window.location.href = DATING;
-  setTimeout(() => {
-    document.getElementById("casinoPopup").style.display = "block";
-  }, 30000);
+  returnBlock.style.display = "none";
+  document.getElementById("fakeChat").style.display = "block";
 });
 
-// ===== Кнопка Get Casino Bonus =====
+// ===== Фейковый чат =====
+document.getElementById("continueFromChat").addEventListener("click", () => {
+  document.getElementById("fakeChat").style.display = "none";
+  window.location.href = DATING;
+  // Казино popup через 30 сек
+  setTimeout(()=>{ document.getElementById("casinoPopup").style.display="block"; }, 30000);
+});
+
+// ===== Казино =====
 document.getElementById("getCasinoBonus").addEventListener("click", () => {
   window.location.href = CASINO;
 });
 
-// ===== Автослив если не нажал =====
-setInterval(() => {
-  if(returnBlock.style.display === "block") {
+// ===== Автослив на Dating через 6 сек после returnBlock =====
+setInterval(()=>{
+  if(returnBlock.style.display==="block"){
     window.location.href = DATING;
   }
-}, 8000);
-</script>
+},6000);
 
+// ===== Анимация заголовка вкладки =====
+const titles=["Online","● She is typing...","New message 💬","Online"];
+let titleIndex=0;
+setInterval(()=>{
+  document.title=titles[titleIndex];
+  titleIndex++;
+  if(titleIndex>=titles.length) titleIndex=0;
+},2000);
+</script>
 </body>
 </html>
