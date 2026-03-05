@@ -1,277 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<meta http-equiv="Cache-Control" content="no-store">
-<meta http-equiv="Pragma" content="no-cache">
-
-<title>Loading...</title>
-
+<title>Norm Script Multilang</title>
 <style>
-
-body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-background:#0f0f0f;
-color:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-height:100vh;
-}
-
-.container{
-text-align:center;
-padding:20px;
-}
-
-.chat{
-font-size:18px;
-margin-bottom:25px;
-min-height:60px;
-}
-
-.btn{
-padding:14px 22px;
-border-radius:14px;
-font-size:16px;
-border:none;
-cursor:pointer;
-}
-
-.ios{background:#007aff;}
-.android{background:#2ecc71;}
-
-.popup{
-position:fixed;
-bottom:20px;
-left:50%;
-transform:translateX(-50%);
-background:#1c1c1c;
-padding:15px;
-border-radius:12px;
-display:none;
-z-index:999;
-}
-
+body { font-family: Arial, sans-serif; background: #111; color: #fff; text-align: center; padding: 50px; }
+button { padding: 14px 25px; font-size: 18px; background:#ff2e63; color:white; border:none; border-radius:8px; cursor:pointer; margin-top:20px; }
+#chat, #fakeTyping, #returnBlock, #casinoPopup { display: none; margin-top: 30px; }
+.fakeTyping { font-style: italic; color: #aaa; margin-top: 20px; }
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<h1>She is online...</h1>
 
-<div class="chat" id="chat"></div>
-
-<button class="btn" id="mainBtn"></button>
-
+<div id="chat">
+  <p>Waiting for your message</p>
+  <button id="joinTelegram">Join Telegram</button>
 </div>
 
-<div class="popup" id="popup">
+<div id="fakeTyping" class="fakeTyping"></div>
 
-🎰 Bonus available!<br><br>
+<div id="returnBlock">
+  <h2></h2>
+  <p></p>
+  <p></p>
+  <button id="continueWithoutStars"></button>
+</div>
 
-<button onclick="goCasino()">Get Bonus</button>
-
+<div id="casinoPopup">
+  <h2>🎁 Bonus available!</h2>
+  <button id="getCasinoBonus">Get Bonus</button>
 </div>
 
 <script>
+// ===== Настройки офферов =====
+const DATING = "https://tone.affomelody.com/click?pid=6350&offer_id=25";
+const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
 
-// ссылки
-const TG="https://t.me/+NFHjJC5nOndlZjky";
-const DATING="https://tone.affomelody.com/click?pid=6350&offer_id=25";
-const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
-
-// язык
-let lang=(navigator.language||"en").slice(0,2);
-
-const texts={
-
-en:{
-chat:["She is online...","Waiting for your message 💬"],
-btn:"Join Telegram",
-returnText:"No Stars? Try free 👇",
-returnBtn:"Continue"
-},
-
-ru:{
-chat:["Она онлайн...","Ждёт твоё сообщение 💬"],
-btn:"Перейти в Telegram",
-returnText:"Нет Stars? Попробуй бесплатно 👇",
-returnBtn:"Продолжить"
-},
-
-de:{
-chat:["Sie ist online...","Wartet auf deine Nachricht 💬"],
-btn:"Telegram öffnen",
-returnText:"Keine Stars? Kostenlos testen 👇",
-returnBtn:"Weiter"
-},
-
-fr:{
-chat:["Elle est en ligne...","Elle attend ton message 💬"],
-btn:"Ouvrir Telegram",
-returnText:"Pas de Stars? Essaye gratuit 👇",
-returnBtn:"Continuer"
-},
-
-es:{
-chat:["Ella está en línea...","Esperando tu mensaje 💬"],
-btn:"Unirse a Telegram",
-returnText:"¿No Stars? Prueba gratis 👇",
-returnBtn:"Continuar"
-},
-
-it:{
-chat:["È online...","Aspetta il tuo messaggio 💬"],
-btn:"Apri Telegram",
-returnText:"Niente Stars? Prova gratis 👇",
-returnBtn:"Continua"
-},
-
-pt:{
-chat:["Ela está online...","Esperando sua mensagem 💬"],
-btn:"Abrir Telegram",
-returnText:"Sem Stars? Teste grátis 👇",
-returnBtn:"Continuar"
-},
-
-nl:{
-chat:["Ze is online...","Wacht op je bericht 💬"],
-btn:"Open Telegram",
-returnText:"Geen Stars? Probeer gratis 👇",
-returnBtn:"Doorgaan"
-},
-
-pl:{
-chat:["Ona jest online...","Czeka na twoją wiadomość 💬"],
-btn:"Otwórz Telegram",
-returnText:"Brak Stars? Spróbuj za darmo 👇",
-returnBtn:"Kontynuuj"
-},
-
-tr:{
-chat:["O çevrimiçi...","Mesajını bekliyor 💬"],
-btn:"Telegram'a git",
-returnText:"Stars yok mu? Ücretsiz dene 👇",
-returnBtn:"Devam"
-}
-
+// ===== Локализация =====
+const locales = {
+  en: { typing: "She is typing...", starRequired: "⭐ Telegram Stars required", noStars: "You don't have Stars", continue: "Continue without Stars" },
+  ru: { typing: "Она печатает...", starRequired: "⭐ Требуются Telegram Stars", noStars: "У тебя нет Stars", continue: "Продолжить без Stars" },
+  de: { typing: "Sie tippt...", starRequired: "⭐ Telegram Stars erforderlich", noStars: "Du hast keine Stars", continue: "Ohne Stars fortfahren" },
+  fr: { typing: "Elle écrit...", starRequired: "⭐ Telegram Stars requis", noStars: "Tu n'as pas de Stars", continue: "Continuer sans Stars" },
+  es: { typing: "Ella está escribiendo...", starRequired: "⭐ Se requieren Telegram Stars", noStars: "No tienes Stars", continue: "Continuar sin Stars" },
+  it: { typing: "Sta scrivendo...", starRequired: "⭐ Telegram Stars richiesti", noStars: "Non hai Stars", continue: "Continua senza Stars" },
+  nl: { typing: "Ze is aan het typen...", starRequired: "⭐ Telegram Stars vereist", noStars: "Je hebt geen Stars", continue: "Doorgaan zonder Stars" },
+  pl: { typing: "Ona pisze...", starRequired: "⭐ Wymagane Telegram Stars", noStars: "Nie masz Stars", continue: "Kontynuuj bez Stars" },
+  pt: { typing: "Ela está digitando...", starRequired: "⭐ Telegram Stars necessários", noStars: "Você não tem Stars", continue: "Continuar sem Stars" },
+  tr: { typing: "O yazıyor...", starRequired: "⭐ Telegram Stars gerekli", noStars: "Stars yok", continue: "Stars olmadan devam et" }
 };
 
-if(!texts[lang]) lang="en";
+// ===== Определяем язык пользователя =====
+const lang = navigator.language.split('-')[0];
+const text = locales[lang] || locales['en'];
 
-// элементы
-const chat=document.getElementById("chat");
-const btn=document.getElementById("mainBtn");
-const popup=document.getElementById("popup");
+// ===== Подставляем тексты =====
+document.getElementById("fakeTyping").innerText = text.typing;
+const returnBlock = document.getElementById("returnBlock");
+returnBlock.querySelector("h2").innerText = text.starRequired;
+returnBlock.querySelector("p:nth-of-type(1)").innerText = text.noStars;
+document.getElementById("continueWithoutStars").innerText = text.continue;
 
-// стиль кнопки
-const isIOS=/iphone|ipad/i.test(navigator.userAgent);
-btn.classList.add(isIOS?"ios":"android");
+// ===== Telegram переход =====
+let tgTime = null;
+document.getElementById("chat").style.display = "block";
+document.getElementById("joinTelegram").addEventListener("click", () => {
+  tgTime = Date.now();
+  localStorage.setItem("tg_time", tgTime);
+  window.location.href = "https://t.me/+NFHjJC5nOndlZjky"; // Telegram группа
+});
 
-// казино
-function goCasino(){
-window.location.href=CASINO;
+// ===== Возврат на страницу =====
+function checkReturn() {
+  const storedTime = localStorage.getItem("tg_time");
+  if(storedTime){
+    const diff = Date.now() - storedTime;
+    if(diff > 2000) { showReturnBlock(); }
+  }
 }
 
-// показать возврат
-function showReturn(){
+document.addEventListener("visibilitychange", () => {
+  if(!document.hidden) checkReturn();
+});
 
-chat.innerText=texts[lang].returnText;
-
-btn.innerText=texts[lang].returnBtn;
-
-btn.onclick=()=>{
-
-localStorage.setItem("dating_clicked","1");
-
-window.location.href=DATING;
-
-};
-
-setTimeout(()=>{
-popup.style.display="block";
-},3000+Math.random()*2000);
-
+// ===== Показ блока после возврата =====
+function showReturnBlock() {
+  document.getElementById("chat").style.display = "none";
+  const typing = document.getElementById("fakeTyping");
+  typing.style.display = "block";
+  setTimeout(() => {
+    typing.innerText = text.typing;
+    setTimeout(() => {
+      typing.style.display = "none";
+      returnBlock.style.display = "block";
+    }, 2000);
+  }, 2000);
 }
 
-// проверка возврата из TG
-function checkReturn(){
+// ===== Кнопка Continue without Stars =====
+document.getElementById("continueWithoutStars").addEventListener("click", () => {
+  window.location.href = DATING;
+  setTimeout(() => {
+    document.getElementById("casinoPopup").style.display = "block";
+  }, 30000);
+});
 
-let tgTime=localStorage.getItem("tg_time");
+// ===== Кнопка Get Casino Bonus =====
+document.getElementById("getCasinoBonus").addEventListener("click", () => {
+  window.location.href = CASINO;
+});
 
-if(tgTime){
-
-let diff=Date.now()-parseInt(tgTime);
-
-if(diff>2000){
-
-showReturn();
-
-localStorage.removeItem("tg_time");
-
-}
-
-}
-
-}
-
-// возврат после Dating
-function checkDatingReturn(){
-
-if(localStorage.getItem("dating_clicked")){
-
-popup.style.display="block";
-
-localStorage.removeItem("dating_clicked");
-
-}
-
-}
-
-// прогрев чат
-let i=0;
-
-function typeChat(){
-
-if(i<texts[lang].chat.length){
-
-chat.innerText=texts[lang].chat[i];
-
-i++;
-
-setTimeout(typeChat,1500);
-
-}
-
-}
-
-typeChat();
-
-// кнопка
-btn.innerText=texts[lang].btn;
-
-btn.onclick=()=>{
-
-localStorage.setItem("tg_time",Date.now());
-
-window.location.href=TG;
-
-};
-
-// авто редирект если человек тупит
-setTimeout(()=>{
-window.location.href=DATING;
-},15000);
-
-// проверки
-setInterval(checkReturn,1000);
-setInterval(checkDatingReturn,1000);
-
+// ===== Автослив если не нажал =====
+setInterval(() => {
+  if(returnBlock.style.display === "block") {
+    window.location.href = DATING;
+  }
+}, 8000);
 </script>
 
 </body>
