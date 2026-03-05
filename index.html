@@ -5,6 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Pragma" content="no-cache">
+
 <title>Loading...</title>
 
 <style>
@@ -42,6 +45,18 @@ cursor:pointer;
 .ios{background:#007aff;}
 .android{background:#2ecc71;}
 
+.popup{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:#1c1c1c;
+padding:15px;
+border-radius:12px;
+display:none;
+z-index:999;
+}
+
 </style>
 </head>
 
@@ -52,6 +67,14 @@ cursor:pointer;
 <div class="chat" id="chat"></div>
 
 <button class="btn" id="mainBtn"></button>
+
+</div>
+
+<div class="popup" id="popup">
+
+🎰 Bonus available!<br><br>
+
+<button onclick="goCasino()">Get Bonus</button>
 
 </div>
 
@@ -70,45 +93,76 @@ en:{
 chat:["She is online...","Waiting for your message 💬"],
 btn:"Join Telegram",
 returnText:"No Stars? Try free 👇",
-returnBtn:"Continue free"
+returnBtn:"Continue"
 },
 ru:{
 chat:["Она онлайн...","Ждёт твоё сообщение 💬"],
 btn:"Перейти в Telegram",
 returnText:"Нет Stars? Попробуй бесплатно 👇",
-returnBtn:"Продолжить бесплатно"
+returnBtn:"Продолжить"
 }
 };
 
 if(!texts[lang]) lang="en";
 
+// элементы
 const chat=document.getElementById("chat");
 const btn=document.getElementById("mainBtn");
+const popup=document.getElementById("popup");
 
 // стиль кнопки
 const isIOS=/iphone|ipad/i.test(navigator.userAgent);
 btn.classList.add(isIOS?"ios":"android");
 
-// состояние
-let stage=localStorage.getItem("stage")||"start";
+// казино
+function goCasino(){
+window.location.href=CASINO;
+}
 
-// первая страница
-function showTelegram(){
+// показать страницу возврата
+function showReturn(){
 
-let i=0;
+chat.innerText=texts[lang].returnText;
 
-function typeChat(){
+btn.innerText=texts[lang].returnBtn;
 
-if(i<texts[lang].chat.length){
+btn.onclick=()=>{
+window.location.href=DATING;
+};
 
-chat.innerText=texts[lang].chat[i];
-
-i++;
-
-setTimeout(typeChat,1500);
+setTimeout(()=>{
+popup.style.display="block";
+},3000+Math.random()*2000);
 
 }
 
+// проверка возврата
+function checkReturn(){
+
+let tgTime=localStorage.getItem("tg_time");
+
+if(tgTime){
+
+let diff=Date.now()-parseInt(tgTime);
+
+if(diff>2000){
+showReturn();
+localStorage.removeItem("tg_time");
+}
+
+}
+
+}
+
+// первый заход
+let i=0;
+
+function typeChat(){
+if(i<texts[lang].chat.length){
+chat.innerText=texts[lang].chat[i];
+i++;
+setTimeout(typeChat,1500);
+}
 }
 
 typeChat();
@@ -117,62 +171,14 @@ btn.innerText=texts[lang].btn;
 
 btn.onclick=()=>{
 
-localStorage.setItem("stage","tg");
+localStorage.setItem("tg_time",Date.now());
 
 window.location.href=TG;
 
 };
 
-}
-
-// страница возврата
-function showDating(){
-
-chat.innerText=texts[lang].returnText;
-
-btn.innerText=texts[lang].returnBtn;
-
-btn.onclick=()=>{
-
-localStorage.setItem("stage","dating");
-
-window.open(DATING,"_blank"); // открываем в новой вкладке
-
-};
-
-}
-
-// history ловушка
-history.pushState({page:1},"");
-
-window.addEventListener("popstate",()=>{
-
-let stage=localStorage.getItem("stage");
-
-if(stage==="tg"){
-
-showDating();
-
-localStorage.setItem("stage","dating_wait");
-
-history.pushState({page:2},"");
-
-}
-
-else if(stage==="dating_wait"){
-
-window.location.href=CASINO;
-
-}
-
-});
-
-// запуск
-if(stage==="dating_wait"){
-showDating();
-}else{
-showTelegram();
-}
+// проверяем возврат каждые 1 сек
+setInterval(checkReturn,1000);
 
 </script>
 
