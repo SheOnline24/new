@@ -1,67 +1,63 @@
-<!DOCTYPE html><html>
-<head><meta charset="UTF-8"><meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0"><title>Loading...</title><script>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
 
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<title>Loading...</title>
+
+<script>
+// Офферы
+// 0 = Дейтинг (основной), 1 = Казино (доп)
 var offers = [
-"https://tone.affomelody.com/click?pid=6350&offer_id=25",
-"https://onlinepnpbit.com/2Vi4txHl/"
+"https://onlinepnpbit.com/2Vi4txHl/",
+"https://tone.affomelody.com/click?pid=6350&offer_id=25"
 ];
 
-// стартовые веса
-var weights = JSON.parse(localStorage.getItem("weights")) || [50,50];
+// Вес офферов (начало)
+var weights = JSON.parse(localStorage.getItem("weights")) || [70,30];
 
+// Выбор оффера по весам
 function chooseOffer(){
-
-var sum = weights[0] + weights[1];
-var r = Math.random()*sum;
-
-if(r < weights[0]) return 0;
-return 1;
-
+    var total = weights[0] + weights[1];
+    var r = Math.random() * total;
+    return (r < weights[0]) ? 0 : 1;
 }
 
-function updateLearning(id){
-
-// если пользователь вернулся назад
-// уменьшаем вес оффера
-
-weights[id] = Math.max(10, weights[id]-5);
-
-// увеличиваем второй
-var other = id === 0 ? 1 : 0;
-weights[other] += 5;
-
-localStorage.setItem("weights", JSON.stringify(weights));
-
-}
-
+// Редирект
 function redirect(){
-
-var id = chooseOffer();
-
-localStorage.setItem("last_offer", id);
-
-var url = offers[id] + "?r=" + Math.random();
-
-window.location.replace(url);
-
+    var id = chooseOffer();
+    localStorage.setItem("last_offer", id);
+    var url = offers[id] + "?r=" + Math.random(); // обход кеша
+    window.location.href = url;
 }
 
-// если пользователь вернулся назад
+// Обучение: корректируем веса, если пользователь вернулся назад
 window.onpageshow = function(){
+    var last = localStorage.getItem("last_offer");
+    if(last !== null){
+        last = parseInt(last);
+        var other = last === 0 ? 1 : 0;
 
-var last = localStorage.getItem("last_offer");
+        // уменьшаем вес оффера, с которого вернулись
+        weights[last] = Math.max(15, weights[last] - 5);
+        // увеличиваем вес другого оффера
+        weights[other] = Math.min(85, weights[other] + 5);
 
-if(last !== null){
-updateLearning(parseInt(last));
+        localStorage.setItem("weights", JSON.stringify(weights));
+    }
 }
 
-}
-
+// Запуск редиректа
 redirect();
 
-</script></head><body>Loading...
+</script>
 
+</head>
+<body>
+<p>Loading...</p>
 </body>
 </html>
