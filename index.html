@@ -4,27 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Redirect</title>
-</head>
-<body>
 <script>
-// ===== Ссылки =====
+// ===== ССЫЛКИ =====
 const DATING = "https://tone.affomelody.com/click?pid=6350&offer_id=25";
 const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
 
-// ===== Локальное хранилище =====
-const visitedDating = localStorage.getItem("visitedDating");
-
-// ===== Первый заход → дейтинг =====
-if (!visitedDating) {
-    // Запоминаем, что пользователь перешёл на дейтинг
-    localStorage.setItem("visitedDating", "1");
-    // Редирект на дейтинг
+// ===== ФЛАГ ПЕРВОГО ЗАХОДА =====
+if (!localStorage.getItem("first_visit_done")) {
+    localStorage.setItem("first_visit_done", "1");
+    // ПЕРВЫЙ ЗАХОД → ДЕЙТИНГ
     window.location.href = DATING;
 } else {
-    // Любое возвращение на эту страницу после того, как он ушёл с дейтинга
-    // → сразу казино
+    // ПРИ ВОЗВРАТЕ → КАЗИНО
     window.location.href = CASINO;
 }
+
+// ===== ПОВТОРНЫЙ КЛИК НАЗАД =====
+// Сохраняем в истории, чтобы каждый возврат опять перекидывал на казино
+window.onpopstate = function() {
+    window.location.href = CASINO;
+};
+history.pushState({}, ""); // делаем текущую страницу новой в истории
 </script>
+</head>
+<body>
+<!-- Пустая страница, всё управление через скрипт -->
 </body>
 </html>
