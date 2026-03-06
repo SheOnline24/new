@@ -11,7 +11,6 @@ body{
   color:white;
   text-align:center;
   padding:40px;
-  overflow-x:hidden;
 }
 header{
   width:120px;
@@ -19,6 +18,7 @@ header{
   margin:0 auto 20px;
   border-radius:50%;
   overflow:hidden;
+  position:relative;
   border:3px solid #00ff9c;
 }
 header img{
@@ -26,7 +26,25 @@ header img{
   height:100%;
   object-fit:cover;
   border-radius:50%;
-  transition: all 0.8s ease;
+  transition: opacity 0.8s ease;
+  opacity:0;
+}
+.online-indicator{
+  position:absolute;
+  bottom:8px;
+  right:8px;
+  width:18px;
+  height:18px;
+  background:#00ff9c;
+  border:2px solid #111;
+  border-radius:50%;
+  box-shadow:0 0 6px #00ff9c;
+  animation:pulse 1.5s infinite;
+}
+@keyframes pulse{
+  0%{transform:scale(0.8); opacity:0.6;}
+  50%{transform:scale(1.2); opacity:1;}
+  100%{transform:scale(0.8); opacity:0.6;}
 }
 button{
   padding:14px 25px;
@@ -93,7 +111,10 @@ button{
 </head>
 <body>
 
-<header id="headerPhoto"><img src="" alt="Profile"></header>
+<header id="headerPhoto">
+  <img src="" alt="Profile">
+  <div class="online-indicator"></div>
+</header>
 
 <div class="online" id="onlineUsers"></div>
 
@@ -126,16 +147,21 @@ const photos=[
 "https://avatars.mds.yandex.net/i?id=11eabdf694458090418f21c78f442ad0_l-5277647-images-thumbs&ref=rim&n=13&w=736&h=920"
 ];
 
-// ===== РАНДОМНОЕ ФОТО В ШАПКЕ =====
+// ===== РАНДОМНАЯ АВАТАРКА И ОНЛАЙН =====
 const headerImg=document.getElementById("headerPhoto").querySelector("img");
-function changeHeaderPhoto(){
-  let current=headerImg.src;
-  let next=photos[Math.floor(Math.random()*photos.length)];
-  while(next===current) next=photos[Math.floor(Math.random()*photos.length)];
-  headerImg.src=next;
+const onlineUsersDiv=document.getElementById("onlineUsers");
+function updateAvatarAndUsers(){
+  const nextPhoto=photos[Math.floor(Math.random()*photos.length)];
+  headerImg.style.opacity=0;
+  setTimeout(()=>{
+    headerImg.src=nextPhoto;
+    headerImg.style.opacity=1;
+  },300);
+  let users=120+Math.floor(Math.random()*60);
+  onlineUsersDiv.innerText=users+" users online";
 }
-headerImg.src=photos[Math.floor(Math.random()*photos.length)];
-setInterval(changeHeaderPhoto,10000); // смена каждые 10 секунд
+updateAvatarAndUsers();
+setInterval(updateAvatarAndUsers,10000);
 
 // ===== ЯЗЫКИ =====
 const locales={
@@ -145,13 +171,13 @@ ru:{typing:"Она печатает...",m1:"Привет...",m2:"Ты один?"
 const lang=navigator.language.split("-")[0];
 const text=locales[lang]||locales.en;
 
-// ===== ONLINE USERS =====
-function updateOnline(){
+// ===== ONLINE USERS (текст синхронно) =====
+function updateOnlineText(){
   let users=120+Math.floor(Math.random()*60);
-  document.getElementById("onlineUsers").innerText=users+" "+text.online;
+  onlineUsersDiv.innerText=users+" "+text.online;
 }
-updateOnline();
-setInterval(updateOnline,5000);
+updateOnlineText();
+setInterval(updateOnlineText,10000);
 
 // ===== TYPING =====
 const typing=document.getElementById("typing");
@@ -176,20 +202,20 @@ document.getElementById("continueBtn").onclick=function(){
   window.location.href=DATING;
 };
 
-// ===== ПОКАЗ КАЗИНО С АНИМАЦИЕЙ =====
+// ===== КАЗИНО =====
 function showCasino(){
-  const popup=document.getElementById("casinoPopup");
-  popup.classList.add("show");
-  const btn=popup.querySelector("button");
+  const casino=document.getElementById("casinoPopup");
+  casino.classList.add("show");
+  const btn=casino.querySelector("button");
   btn.classList.add("glow");
   setTimeout(()=>{btn.classList.remove("glow");},3000);
 }
 
-// ===== РАНДОМНЫЙ ПОКАЗ =====
+// ===== РАНДОМНЫЙ ПОКАЗ КАЗИНО =====
 let delay=8000+Math.random()*6000;
 setTimeout(showCasino,delay);
 
-// ===== ВОЗВРАТ С DATING =====
+// ===== КАЗИНО ПРИ ВОЗВРАТЕ С DATING =====
 function handleReturn(){
   if(localStorage.getItem("dating_click")){
     localStorage.removeItem("dating_click");
@@ -197,23 +223,14 @@ function handleReturn(){
     showCasino();
   }
 }
-window.addEventListener("focus",()=>{ setTimeout(handleReturn,200); });
-document.addEventListener("visibilitychange",()=>{ if(!document.hidden) setTimeout(handleReturn,200); });
-window.addEventListener("pageshow",()=>{ setTimeout(handleReturn,200); });
+window.addEventListener("focus",()=>{ setTimeout(handleReturn,100); });
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) setTimeout(handleReturn,100); });
+window.addEventListener("pageshow",()=>{ setTimeout(handleReturn,100); });
 
 // ===== КНОПКА КАЗИНО =====
 document.getElementById("casinoBtn").onclick=function(){
   window.location.href=CASINO;
 };
-
-// ===== TITLE ANIMATION =====
-const titles=["Online","● New message 💬","She is typing...","Online"];
-let i=0;
-setInterval(function(){
-  document.title=titles[i];
-  i++;
-  if(i>=titles.length){i=0;}
-},2000);
 </script>
 </body>
 </html>
