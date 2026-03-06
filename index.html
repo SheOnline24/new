@@ -1,52 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Redirect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Loading...</title>
 
 <script>
 
-const DATING = "https://tone.affomelody.com/click?pid=6350&offer_id=25";
+// список партнерок
+const links = [
+"https://tone.affomelody.com/click?pid=6350&offer_id=25",
+"https://rdlwl.llovellydates.com/?utm_source=da57dc555e50572d&ban=tg",
+"https://example.com"
+];
 
-const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
-
-let state = 0;
-
-function pushHistory(){
-history.pushState({}, "", "#1");
-history.pushState({}, "", "#2");
-history.pushState({}, "", "#3");
+// случайная ссылка
+function getRandomLink(){
+return links[Math.floor(Math.random()*links.length)];
 }
 
+// редирект
+function go(){
+window.location.replace(getRandomLink());
+}
+
+// запуск при загрузке
 window.onload = function(){
-
-pushHistory();
-
-// первый заход → дейтинг
-location.replace(DATING);
-
+setTimeout(go,50);
 };
 
-window.onpopstate = function(){
-
-pushHistory();
-
-if(state === 0){
-
-state = 1;
-
-// назад → казино
-location.replace(CASINO);
-
-}else{
-
-state = 0;
-
-// снова назад → дейтинг
-location.replace(DATING);
-
-}
-
+// запуск при возврате назад
+window.onpageshow = function(){
+setTimeout(go,50);
 };
 
 </script>
@@ -55,7 +41,9 @@ location.replace(DATING);
 
 <body>
 
+<h2 style="text-align:center;margin-top:40vh;font-family:sans-serif;">
 Loading...
+</h2>
 
 </body>
 </html>
