@@ -1,49 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redirect</title><script>
 
-<title>Loading...</title>
+const DATING = "https://tone.affomelody.com/click?pid=6350&offer_id=25";
+const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
 
-<script>
-
-// список партнерок
-const links = [
-"https://tone.affomelody.com/click?pid=6350&offer_id=25",
-"https://rdlwl.llovellydates.com/?utm_source=da57dc555e50572d&ban=tg",
-"https://example.com"
-];
-
-// случайная ссылка
-function getRandomLink(){
-return links[Math.floor(Math.random()*links.length)];
+if(!sessionStorage.getItem("visited")){
+sessionStorage.setItem("visited","dating");
+location.replace(DATING);
 }
 
-// редирект
-function go(){
-window.location.replace(getRandomLink());
+window.onpageshow=function(){
+history.pushState(null,null,location.href);
+};
+
+window.onpopstate=function(){
+
+let step=sessionStorage.getItem("visited");
+
+if(step==="dating"){
+sessionStorage.setItem("visited","casino");
+location.replace(CASINO);
+}else{
+sessionStorage.setItem("visited","dating");
+location.replace(DATING);
 }
 
-// запуск при загрузке
-window.onload = function(){
-setTimeout(go,50);
 };
 
-// запуск при возврате назад
-window.onpageshow = function(){
-setTimeout(go,50);
-};
-
-</script>
-
-</head>
-
-<body>
-
-<h2 style="text-align:center;margin-top:40vh;font-family:sans-serif;">
-Loading...
-</h2>
-
+</script></head><body>
+Redirecting...
 </body>
 </html>
