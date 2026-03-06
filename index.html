@@ -1,281 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-store">
+
 <title>Online</title>
 
 <style>
 
 body{
+margin:0;
 font-family:Arial;
 background:#111;
 color:white;
 text-align:center;
-padding:40px;
 }
 
-/* АВАТАР */
-
-header{
-width:110px;
-height:110px;
-margin:0 auto 15px auto;
-border-radius:50%;
-overflow:hidden;
-position:relative;
-border:3px solid #ff2e63;
-}
-
-header img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-/* ONLINE DOT */
-
-.online-dot{
-position:absolute;
-bottom:6px;
-right:6px;
-width:16px;
-height:16px;
-background:#00ff9c;
-border-radius:50%;
-box-shadow:0 0 0 rgba(0,255,156,0.7);
-animation:pulse 2s infinite;
-}
-
-@keyframes pulse{
-0%{box-shadow:0 0 0 0 rgba(0,255,156,0.7);}
-70%{box-shadow:0 0 0 12px rgba(0,255,156,0);}
-100%{box-shadow:0 0 0 0 rgba(0,255,156,0);}
-}
-
-/* USERS */
-
-.online{
-color:#00ff9c;
-margin-bottom:20px;
-}
-
-/* CHAT */
-
-.message{
-background:#222;
-padding:12px;
-border-radius:10px;
-margin:10px auto;
-max-width:300px;
-}
-
-button{
-padding:14px 25px;
-font-size:18px;
-background:#ff2e63;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-margin-top:20px;
-}
-
-#typing,#chat{
-display:none;
-}
-
-/* NEW MESSAGE BADGE */
-
-#newMsg{
-display:none;
-background:#ff2e63;
-padding:6px 12px;
-border-radius:20px;
-font-size:14px;
-margin-bottom:10px;
-animation:bounce 1s infinite alternate;
-}
-
-@keyframes bounce{
-from{transform:translateY(0);}
-to{transform:translateY(-5px);}
-}
-
-/* CASINO POPUP */
-
-#casinoPopup{
-position:fixed;
-bottom:20px;
-right:20px;
-width:220px;
-background:#1b1b1b;
-border-radius:12px;
+.header{
+background:#1c1c1c;
 padding:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.6);
-opacity:0;
-transform:translateY(40px);
-transition:all 0.6s ease;
-z-index:999;
+font-size:18px;
 }
 
-#casinoPopup.show{
-opacity:1;
-transform:translateY(0);
+.chat{
+padding:30px;
 }
 
-#casinoBtn{
-width:100%;
-margin-top:10px;
+.avatar{
+width:60px;
+height:60px;
+border-radius:50%;
+margin-bottom:10px;
 }
 
-#casinoBtn.mild-glow{
-box-shadow:0 0 12px rgba(255,46,99,0.6);
+.btn{
+display:inline-block;
+padding:14px 30px;
+background:linear-gradient(90deg,#ff6a00,#ff0066);
+color:white;
+border-radius:10px;
+text-decoration:none;
+font-size:18px;
+margin-top:20px;
+background-size:200% 200%;
+animation:shine 4s ease infinite;
+}
+
+@keyframes shine{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+.casinoBanner{
+position:fixed;
+bottom:25px;
+right:20px;
+background:#1c1c1c;
+padding:14px 18px;
+border-radius:10px;
+box-shadow:0 0 20px rgba(0,0,0,0.6);
+display:none;
+animation:popup 0.7s ease;
+}
+
+@keyframes popup{
+0%{transform:translateY(60px);opacity:0}
+100%{transform:translateY(0);opacity:1}
+}
+
+.casinoBtn{
+display:inline-block;
+padding:10px 20px;
+background:linear-gradient(90deg,#ff6a00,#ff0066);
+border-radius:8px;
+color:white;
+text-decoration:none;
+margin-top:8px;
+font-size:15px;
 }
 
 </style>
+
+<script>
+
+const datingLink = "https://tone.affomelody.com/click?pid=6350&offer_id=25";
+const casinoLink = "https://example-casino.com";
+
+let step = localStorage.getItem("step");
+
+if(!step){
+localStorage.setItem("step","1");
+}
+
+window.onpageshow = function(event){
+
+let step = localStorage.getItem("step");
+
+if(step=="2"){
+showCasino();
+}
+
+if(step=="3"){
+window.location.href = datingLink;
+}
+
+};
+
+function startChat(){
+
+localStorage.setItem("step","2");
+window.location.href = datingLink;
+
+}
+
+function showCasino(){
+
+setTimeout(()=>{
+document.getElementById("casinoBanner").style.display="block";
+localStorage.setItem("step","3");
+},1200);
+
+}
+
+</script>
+
 </head>
 
 <body>
 
-<header>
-<img id="avatar">
-<div class="online-dot"></div>
-</header>
-
-<div class="online" id="onlineUsers"></div>
-
-<div id="newMsg">1 new message</div>
-
-<div id="typing">
-<span id="typingText"></span>
+<div class="header">
+Online • <span id="users"></span>
 </div>
 
-<div id="chat">
-<div class="message" id="m1"></div>
-<div class="message" id="m2"></div>
-<div class="message" id="m3"></div>
-<button id="continueBtn"></button>
+<div class="chat">
+
+<img class="avatar" src="https://avatars.mds.yandex.net/i?id=11eabdf694458090418f21c78f442ad0_l-5277647-images-thumbs&ref=rim&n=13&w=736&h=920">
+
+<h2>Anna</h2>
+
+<p>Hi... are you alone right now? 😉</p>
+
+<a class="btn" onclick="startChat()">Start Chat</a>
+
 </div>
 
-<div id="casinoPopup">
-<h3>🎁 Bonus available</h3>
-<button id="casinoBtn">Get Bonus</button>
+<div class="casinoBanner" id="casinoBanner">
+
+🎁 Bonus available
+
+<br>
+
+<a class="casinoBtn" href="https://example-casino.com">Claim</a>
+
 </div>
 
 <script>
 
-// ОФФЕРЫ
-const DATING="https://tone.affomelody.com/click?pid=6350&offer_id=25";
-const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
-
-// ФОТО ДЕВУШЕК
-const photos=[
-"https://avatars.mds.yandex.net/i?id=18d21c015ad863434f710614c479adb3_l-5331866-images-thumbs&n=33&w=710&h=1263",
-"https://avatars.mds.yandex.net/i?id=2f068b39e7edee0378ca03431b5d7bb9_l-4146308-images-thumbs&n=13",
-"https://avatars.mds.yandex.net/i?id=e59d7968da3aed795667b0778d96c86f_l-10907478-images-thumbs&n=13",
-"https://avatars.mds.yandex.net/i?id=88ccc977190dc9d73f3d898caea4d19d_l-5219096-images-thumbs&n=13",
-"https://avatars.mds.yandex.net/i?id=4cb7896f706466099a81276a024ddebf_l-5225342-images-thumbs&n=13",
-"https://avatars.mds.yandex.net/i?id=11eabdf694458090418f21c78f442ad0_l-5277647-images-thumbs&ref=rim&n=13&w=736&h=920"
-];
-
-document.getElementById("avatar").src=
-photos[Math.floor(Math.random()*photos.length)];
-
-// ЯЗЫКИ
-const locales={
-en:{typing:"She is typing...",m1:"Hey...",m2:"Are you alone?",m3:"Let's chat privately...",btn:"Continue chat",online:"users online"},
-ru:{typing:"Она печатает...",m1:"Привет...",m2:"Ты один?",m3:"Давай пообщаемся...",btn:"Продолжить чат",online:"пользователей онлайн"}
-};
-
-const lang=navigator.language.split("-")[0];
-const text=locales[lang]||locales.en;
-
-// ONLINE USERS
-function updateOnline(){
-let users=120+Math.floor(Math.random()*80);
-document.getElementById("onlineUsers").innerText=
-users+" "+text.online;
+function updateUsers(){
+let num = Math.floor(Math.random()*120)+180;
+document.getElementById("users").innerText = num;
 }
 
-updateOnline();
-setInterval(updateOnline,5000);
-
-// TYPING
-const typing=document.getElementById("typing");
-typing.style.display="block";
-document.getElementById("typingText").innerText=text.typing;
-
-setTimeout(startChat,2000);
-
-// CHAT
-function startChat(){
-
-typing.style.display="none";
-
-document.getElementById("newMsg").style.display="inline-block";
-
-setTimeout(()=>{
-document.getElementById("newMsg").style.display="none";
-document.getElementById("chat").style.display="block";
-},1500);
-
-setTimeout(()=>{document.getElementById("m1").innerText=text.m1;},2000);
-setTimeout(()=>{document.getElementById("m2").innerText=text.m2;},3500);
-setTimeout(()=>{document.getElementById("m3").innerText=text.m3;},5000);
-
-}
-
-document.getElementById("continueBtn").innerText=text.btn;
-
-// ПЕРЕХОД НА DATING
-document.getElementById("continueBtn").onclick=function(){
-localStorage.setItem("dating_click","1");
-window.location.href=DATING;
-};
-
-// ПОКАЗ КАЗИНО
-function showCasino(){
-
-const casino=document.getElementById("casinoPopup");
-casino.classList.add("show");
-
-const btn=document.getElementById("casinoBtn");
-btn.classList.add("mild-glow");
-
-setTimeout(()=>{
-btn.classList.remove("mild-glow");
-},4000);
-
-}
-
-// РАНДОМ ПОКАЗ
-let delay=9000+Math.random()*5000;
-setTimeout(showCasino,delay);
-
-// ПРИ ВОЗВРАТЕ С DATING
-function handleReturn(){
-
-if(localStorage.getItem("dating_click")){
-
-localStorage.removeItem("dating_click");
-
-setTimeout(showCasino,1500);
-
-}
-
-}
-
-window.addEventListener("focus",()=>{setTimeout(handleReturn,200)});
-document.addEventListener("visibilitychange",()=>{
-if(!document.hidden)setTimeout(handleReturn,200)
-});
-window.addEventListener("pageshow",()=>{setTimeout(handleReturn,200)});
-
-// CASINO
-document.getElementById("casinoBtn").onclick=function(){
-window.location.href=CASINO;
-};
+setInterval(updateUsers,3000);
+updateUsers();
 
 </script>
 
