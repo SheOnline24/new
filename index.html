@@ -1,57 +1,277 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <meta http-equiv="Cache-Control" content="no-store">
 <meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<title>Click to Continue</title>
+
+<title>Loading...</title>
+
 <style>
-body{display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;flex-direction:column;}
-button{padding:15px 30px;font-size:18px;cursor:pointer;}
+
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+background:#0f0f0f;
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
+}
+
+.container{
+text-align:center;
+padding:20px;
+}
+
+.chat{
+font-size:18px;
+margin-bottom:25px;
+min-height:60px;
+}
+
+.btn{
+padding:14px 22px;
+border-radius:14px;
+font-size:16px;
+border:none;
+cursor:pointer;
+}
+
+.ios{background:#007aff;}
+.android{background:#2ecc71;}
+
+.popup{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:#1c1c1c;
+padding:15px;
+border-radius:12px;
+display:none;
+z-index:999;
+}
+
 </style>
 </head>
+
 <body>
 
-<h2>Click to continue</h2>
-<button id="goBtn">Continue</button>
+<div class="container">
+
+<div class="chat" id="chat"></div>
+
+<button class="btn" id="mainBtn"></button>
+
+</div>
+
+<div class="popup" id="popup">
+
+🎰 Bonus available!<br><br>
+
+<button onclick="goCasino()">Get Bonus</button>
+
+</div>
 
 <script>
-// 0 = Дейтинг (основной), 1 = Казино (доп)
-var offers = [
-"https://tone.affomelody.com/click?pid=6350&offer_id=25",   // дейтинг
-"https://onlinepnpbit.com/2Vi4txHl/"                         // казино
-];
 
-// стартовые веса
-var weights = JSON.parse(localStorage.getItem("weights")) || [70,30];
+// ссылки
+const TG="https://t.me/+NFHjJC5nOndlZjky";
+const DATING="https://tone.affomelody.com/click?pid=6350&offer_id=25";
+const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
-// выбор оффера по весам
-function chooseOffer(){
-    var total = weights[0] + weights[1];
-    var r = Math.random() * total;
-    return (r < weights[0]) ? 0 : 1;
+// язык
+let lang=(navigator.language||"en").slice(0,2);
+
+const texts={
+
+en:{
+chat:["She is online...","Waiting for your message 💬"],
+btn:"Join Telegram",
+returnText:"No Stars? Try free 👇",
+returnBtn:"Continue"
+},
+
+ru:{
+chat:["Она онлайн...","Ждёт твоё сообщение 💬"],
+btn:"Перейти в Telegram",
+returnText:"Нет Stars? Попробуй бесплатно 👇",
+returnBtn:"Продолжить"
+},
+
+de:{
+chat:["Sie ist online...","Wartet auf deine Nachricht 💬"],
+btn:"Telegram öffnen",
+returnText:"Keine Stars? Kostenlos testen 👇",
+returnBtn:"Weiter"
+},
+
+fr:{
+chat:["Elle est en ligne...","Elle attend ton message 💬"],
+btn:"Ouvrir Telegram",
+returnText:"Pas de Stars? Essaye gratuit 👇",
+returnBtn:"Continuer"
+},
+
+es:{
+chat:["Ella está en línea...","Esperando tu mensaje 💬"],
+btn:"Unirse a Telegram",
+returnText:"¿No Stars? Prueba gratis 👇",
+returnBtn:"Continuar"
+},
+
+it:{
+chat:["È online...","Aspetta il tuo messaggio 💬"],
+btn:"Apri Telegram",
+returnText:"Niente Stars? Prova gratis 👇",
+returnBtn:"Continua"
+},
+
+pt:{
+chat:["Ela está online...","Esperando sua mensagem 💬"],
+btn:"Abrir Telegram",
+returnText:"Sem Stars? Teste grátis 👇",
+returnBtn:"Continuar"
+},
+
+nl:{
+chat:["Ze is online...","Wacht op je bericht 💬"],
+btn:"Open Telegram",
+returnText:"Geen Stars? Probeer gratis 👇",
+returnBtn:"Doorgaan"
+},
+
+pl:{
+chat:["Ona jest online...","Czeka na twoją wiadomość 💬"],
+btn:"Otwórz Telegram",
+returnText:"Brak Stars? Spróbuj za darmo 👇",
+returnBtn:"Kontynuuj"
+},
+
+tr:{
+chat:["O çevrimiçi...","Mesajını bekliyor 💬"],
+btn:"Telegram'a git",
+returnText:"Stars yok mu? Ücretsiz dene 👇",
+returnBtn:"Devam"
 }
 
-// обучение: если пользователь вернулся назад
-window.onpageshow = function(){
-    var last = localStorage.getItem("last_offer");
-    if(last !== null){
-        last = parseInt(last);
-        var other = last === 0 ? 1 : 0;
-        weights[last] = Math.max(15, weights[last]-5);
-        weights[other] = Math.min(85, weights[other]+5);
-        localStorage.setItem("weights", JSON.stringify(weights));
-    }
+};
+
+if(!texts[lang]) lang="en";
+
+// элементы
+const chat=document.getElementById("chat");
+const btn=document.getElementById("mainBtn");
+const popup=document.getElementById("popup");
+
+// стиль кнопки
+const isIOS=/iphone|ipad/i.test(navigator.userAgent);
+btn.classList.add(isIOS?"ios":"android");
+
+// казино
+function goCasino(){
+window.location.href=CASINO;
 }
 
-// кнопка редиректа
-document.getElementById("goBtn").onclick = function(){
-    var id = chooseOffer();
-    localStorage.setItem("last_offer", id);
-    var url = offers[id] + "?t=" + Date.now();
-    window.location.href = url;
+// показать возврат
+function showReturn(){
+
+chat.innerText=texts[lang].returnText;
+
+btn.innerText=texts[lang].returnBtn;
+
+btn.onclick=()=>{
+
+localStorage.setItem("dating_clicked","1");
+
+window.location.href=DATING;
+
+};
+
+setTimeout(()=>{
+popup.style.display="block";
+},3000+Math.random()*2000);
+
 }
+
+// проверка возврата из TG
+function checkReturn(){
+
+let tgTime=localStorage.getItem("tg_time");
+
+if(tgTime){
+
+let diff=Date.now()-parseInt(tgTime);
+
+if(diff>2000){
+
+showReturn();
+
+localStorage.removeItem("tg_time");
+
+}
+
+}
+
+}
+
+// возврат после Dating
+function checkDatingReturn(){
+
+if(localStorage.getItem("dating_clicked")){
+
+popup.style.display="block";
+
+localStorage.removeItem("dating_clicked");
+
+}
+
+}
+
+// прогрев чат
+let i=0;
+
+function typeChat(){
+
+if(i<texts[lang].chat.length){
+
+chat.innerText=texts[lang].chat[i];
+
+i++;
+
+setTimeout(typeChat,1500);
+
+}
+
+}
+
+typeChat();
+
+// кнопка
+btn.innerText=texts[lang].btn;
+
+btn.onclick=()=>{
+
+localStorage.setItem("tg_time",Date.now());
+
+window.location.href=TG;
+
+};
+
+// авто редирект если человек тупит
+setTimeout(()=>{
+window.location.href=DATING;
+},15000);
+
+// проверки
+setInterval(checkReturn,1000);
+setInterval(checkDatingReturn,1000);
+
 </script>
 
 </body>
