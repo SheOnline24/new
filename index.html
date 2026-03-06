@@ -14,7 +14,7 @@ button{padding:14px 25px;font-size:18px;background:#ff2e63;color:white;border:no
 #typing,#chat,#casinoPopup{display:none;margin-top:30px;}
 .message{background:#222;padding:12px;border-radius:10px;margin:10px auto;max-width:300px;}
 .online{color:#00ff9c;margin-top:10px;}
-#casinoPopup{position:fixed;bottom:20px;right:20px;background:#222;padding:15px 25px;border-radius:12px;opacity:0;transform:translateY(50px) scale(0.8);transition:all 0.8s ease;z-index:999;cursor:pointer;}
+#casinoPopup{position:fixed;bottom:20px;right:20px;background:#222;padding:15px 25px;border-radius:12px;opacity:0;transform:translateY(50px) scale(0.8);transition:all 0.8s ease;z-index:999;}
 #casinoPopup.show{opacity:1;transform:translateY(0) scale(1);animation:popupBounce 0.6s ease;}
 @keyframes popupBounce{0%{transform:translateY(50px) scale(0.8);}50%{transform:translateY(-10px) scale(1.05);}100%{transform:translateY(0) scale(1);}}
 #casinoBtn.glow{animation:glowPulse 1.5s infinite alternate,buttonBounce 0.6s ease;}
@@ -42,12 +42,12 @@ button{padding:14px 25px;font-size:18px;background:#ff2e63;color:white;border:no
 
 <div id="casinoPopup">
   <h3>🎁 Bonus available!</h3>
-  <button id="casinoBtn">Get Bonus</button>
+  <button id="casinoBtn">Play Now</button>
 </div>
 
 <script>
-// ===== ОФФЕРЫ =====
-const DATING="https://tone.affomelody.com/click?pid=6350&offer_id=25";
+// ===== ССЫЛКИ =====
+const SMARTLINK="https://your-smartlink.com";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
 // ===== ФОТО ДЕВУШЕК =====
@@ -72,44 +72,49 @@ const casinoDiv=document.getElementById("casinoPopup");
 const locales={
 en:{typing:"She is typing...",m1:"Hey...",m2:"Are you alone?",m3:"Let's chat privately...",btn:"Continue chat",online:"users online"},
 ru:{typing:"Она печатает...",m1:"Привет...",m2:"Ты один?",m3:"Давай пообщаемся...",btn:"Продолжить чат",online:"пользователей онлайн"},
-hi:{typing:"वह टाइप कर रही है...",m1:"नमस्ते...",m2:"क्या आप अकेले हैं?",m3:"आइए निजी रूप से चैट करें...",btn:"चैट जारी रखें",online:"ऑनलाइन उपयोगकर्ता"},
 es:{typing:"Está escribiendo...",m1:"Hola...",m2:"¿Estás solo?",m3:"Hablemos en privado...",btn:"Continuar chat",online:"usuarios en línea"},
-fr:{typing:"Elle écrit...",m1:"Salut...",m2:"Tu es seul ?",m3:"Discutons en privé...",btn:"Continuer le chat",online:"utilisateurs en ligne"},
-de:{typing:"Sie tippt...",m1:"Hey...",m2:"Bist du allein?",m3:"Lass uns privat chatten...",btn:"Chat fortsetzen",online:"Benutzer online"},
-pt:{typing:"Ela está digitando...",m1:"Oi...",m2:"Você está sozinho?",m3:"Vamos conversar em particular...",btn:"Continuar chat",online:"usuários online"}
+fr:{typing:"Elle écrit...",m1:"Salut...",m2:"Tu es seul?",m3:"Discutons en privé...",btn:"Continuer le chat",online:"utilisateurs en ligne"},
+de:{typing:"Sie tippt...",m1:"Hallo...",m2:"Bist du allein?",m3:"Lass uns privat chatten...",btn:"Chat fortsetzen",online:"Benutzer online"},
+hi:{typing:"वह टाइप कर रही है...",m1:"हाय...",m2:"क्या आप अकेले हैं?",m3:"आइए निजी रूप से चैट करें...",btn:"चैट जारी रखें",online:"ऑनलाइन उपयोगकर्ता"}
 };
 const lang=navigator.language.split("-")[0];
 const text=locales[lang]||locales.en;
 
-// ===== АВАТАРКА ПРИ ЗАХОДЕ =====
-let avatarIndex=Math.floor(Math.random()*photos.length);
-headerImg.src=photos[avatarIndex];
-headerImg.style.opacity=1;
+// ===== ЛОГИКА ПЕРВОГО ПЕРЕХОДА =====
+if(!sessionStorage.getItem("returned")){
+  // Первый заход → смарт-линк
+  sessionStorage.setItem("returned","1"); 
+  window.location.href=SMARTLINK;
+} else {
+  // Пользователь вернулся → показываем чат
+  let avatarIndex=Math.floor(Math.random()*photos.length);
+  headerImg.src=photos[avatarIndex];
+  headerImg.style.opacity=1;
 
-// ===== ONLINE USERS =====
-let users=120+Math.floor(Math.random()*60);
-onlineUsersDiv.innerText=users+" "+text.online;
+  let users=120+Math.floor(Math.random()*60);
+  onlineUsersDiv.innerText=users+" "+text.online;
 
-// ===== TYPING И CHAT =====
-typingDiv.style.display="block";
-document.getElementById("typingText").innerText=text.typing;
+  typingDiv.style.display="block";
+  document.getElementById("typingText").innerText=text.typing;
 
-setTimeout(()=>{
-  typingDiv.style.display="none";
-  chatDiv.style.display="block";
-  document.getElementById("m1").innerText=text.m1;
-  setTimeout(()=>{document.getElementById("m2").innerText=text.m2;},1200);
-  setTimeout(()=>{document.getElementById("m3").innerText=text.m3;},2200);
   setTimeout(()=>{
-    continueBtn.style.display="inline-block"; 
-    continueBtn.innerText=text.btn;
-    // ===== ПОЯВЛЕНИЕ БАННЕРА КАЗИНО ЧЕРЕЗ 7 СЕК =====
-    setTimeout(showCasino,7000);
-  },3000);
-},2500);
+    typingDiv.style.display="none";
+    chatDiv.style.display="block";
+    document.getElementById("m1").innerText=text.m1;
+    setTimeout(()=>{document.getElementById("m2").innerText=text.m2;},1200);
+    setTimeout(()=>{document.getElementById("m3").innerText=text.m3;},2200);
+    setTimeout(()=>{
+      continueBtn.style.display="inline-block"; 
+      continueBtn.innerText=text.btn;
+      setTimeout(showCasino,7000); // Баннер казино через 7 сек
+    },3000);
+  },2500);
+}
 
-// ===== ПЕРЕХОД НА DATING =====
-continueBtn.onclick=function(){window.location.href=DATING;};
+// ===== КНОПКА ЧАТ/СМАРТЛИНК =====
+continueBtn.onclick=function(){
+  window.location.href=SMARTLINK;
+};
 
 // ===== ПОКАЗ КАЗИНО =====
 function showCasino(){
@@ -118,11 +123,10 @@ function showCasino(){
   const btn=casinoDiv.querySelector("button");
   btn.classList.add("glow");
   setTimeout(()=>{btn.classList.remove("glow");},3000);
-
-  // ===== ДЕЛАЕМ ВЕСЬ БАННЕР КЛИКАБЕЛЬНЫМ =====
-  casinoDiv.onclick=()=>{ window.location.href=CASINO; };
-  btn.onclick=null;
 }
+
+// ===== КНОПКА КАЗИНО =====
+document.getElementById("casinoBtn").onclick=function(){window.location.href=CASINO;};
 </script>
 </body>
 </html>
