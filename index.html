@@ -1,17 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redirect</title>
+</head>
+<body>
 <script>
-// Ссылки
+// ===== Ссылки =====
 const DATING = "https://tone.affomelody.com/click?pid=6350&offer_id=25";
 const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
 
-// Добавляем фиктивную запись в историю, чтобы "назад" не уходил на пустую страницу
-history.replaceState({page: "dating"}, "");
+// ===== Локальное хранилище =====
+const visitedDating = localStorage.getItem("visitedDating");
 
-// Первый заход
-if (!localStorage.getItem("firstVisit")) {
-    localStorage.setItem("firstVisit", "true");
+// ===== Первый заход → дейтинг =====
+if (!visitedDating) {
+    // Запоминаем, что пользователь перешёл на дейтинг
+    localStorage.setItem("visitedDating", "1");
+    // Редирект на дейтинг
     window.location.href = DATING;
 } else {
-    // При возврате — редирект на казино
+    // Любое возвращение на эту страницу после того, как он ушёл с дейтинга
+    // → сразу казино
     window.location.href = CASINO;
 }
 </script>
+</body>
+</html>
