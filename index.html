@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,22 +6,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Redirect</title>
 <script>
-  // Твои офферы
-  const DATING = "https://tone.affomelody.com/click?pid=6350&offer_id=25";
-  const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
+// ===== ТВОИ ССЫЛКИ =====
+const DATING = "https://tone.affomelody.com/click?pid=6350&offer_id=25";
+const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
 
-  // Проверка первого захода
-  if (!sessionStorage.getItem("visited")) {
-    // Первый заход → дейтинг
-    sessionStorage.setItem("visited", "1");
+// ===== ЛОГИКА РЕДИРЕКТА =====
+// Проверяем, был ли пользователь уже направлен на дейтинг
+if (!localStorage.getItem("firstVisit")) {
+    // Первый заход — редирект на дейтинг
+    localStorage.setItem("firstVisit", "true");
     window.location.href = DATING;
-  } else {
-    // Возврат → казино
+} else {
+    // Второй заход (возврат) — редирект на казино
     window.location.href = CASINO;
-  }
+}
 </script>
 </head>
 <body>
-<!-- Пустая страница, всё происходит автоматически -->
+<!-- Пустая страница, редирект происходит мгновенно -->
 </body>
 </html>
