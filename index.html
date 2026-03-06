@@ -10,10 +10,7 @@
 
 <script>
 
-function redirect(){
-
 var r = Math.random();
-
 var url;
 
 if(r < 0.7){
@@ -28,12 +25,8 @@ url = "https://onlinepnpbit.com/2Vi4txHl/";
 
 }
 
-// редирект
-window.location.href = url;
-
-}
-
-window.onload = redirect;
+// мгновенный редирект
+window.location.replace(url);
 
 </script>
 
