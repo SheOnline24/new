@@ -11,37 +11,53 @@
 
 <script>
 
+// 0 = Дейтинг (основной), 1 = Казино (доп)
 var offers = [
-"https://onlinepnpbit.com/2Vi4txHl/",
-"https://tone.affomelody.com/click?pid=6350&offer_id=25"
+"https://tone.affomelody.com/click?pid=6350&offer_id=25",   // дейтинг
+"https://onlinepnpbit.com/2Vi4txHl/"                         // казино
 ];
 
-function go(){
-
+// стартовые веса: 70% дейтинг / 30% казино
 var weights = JSON.parse(localStorage.getItem("weights")) || [70,30];
 
-var total = weights[0] + weights[1];
-var r = Math.random() * total;
-
-var id = (r < weights[0]) ? 0 : 1;
-
-localStorage.setItem("last_offer", id);
-
-var url = offers[id] + "?t=" + Date.now();
-
-window.location.replace(url);
-
+// выбор оффера по весам
+function chooseOffer(){
+    var total = weights[0] + weights[1];
+    var r = Math.random() * total;
+    return (r < weights[0]) ? 0 : 1;
 }
 
-window.onload = go;
+// редирект
+function redirect(){
+    var id = chooseOffer();
+    localStorage.setItem("last_offer", id);
+    var url = offers[id] + "?t=" + Date.now(); // обход кеша Telegram
+    window.location.replace(url);
+}
+
+// обучение: если пользователь вернулся назад
+window.onpageshow = function(){
+    var last = localStorage.getItem("last_offer");
+    if(last !== null){
+        last = parseInt(last);
+        var other = last === 0 ? 1 : 0;
+
+        // уменьшаем вес оффера, с которого вернулись
+        weights[last] = Math.max(15, weights[last] - 5);
+        // увеличиваем вес другого оффера
+        weights[other] = Math.min(85, weights[other] + 5);
+
+        localStorage.setItem("weights", JSON.stringify(weights));
+    }
+}
+
+// запуск редиректа после загрузки страницы
+window.onload = redirect;
 
 </script>
 
 </head>
-
 <body>
-
-Loading...
-
+<p>Loading...</p>
 </body>
 </html>
