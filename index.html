@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Redirect</title>
 <script>
-  // Ссылки
-  const SMARTLINK = "https://your-smartlink.com";
+  // Твои офферы
+  const DATING = "https://tone.affomelody.com/click?pid=6350&offer_id=25";
   const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
 
   // Проверка первого захода
   if (!sessionStorage.getItem("visited")) {
-    // Первый заход → смарт-линк
+    // Первый заход → дейтинг
     sessionStorage.setItem("visited", "1");
-    window.location.href = SMARTLINK;
+    window.location.href = DATING;
   } else {
     // Возврат → казино
     window.location.href = CASINO;
@@ -21,6 +21,6 @@
 </script>
 </head>
 <body>
-<!-- Пустая страница, ничего не отображается -->
+<!-- Пустая страница, всё происходит автоматически -->
 </body>
 </html>
