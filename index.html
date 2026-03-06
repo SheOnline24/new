@@ -3,130 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Online</title>
-<style>
-body{font-family:Arial;background:#111;color:white;text-align:center;padding:40px;}
-header{width:120px;height:120px;margin:0 auto 20px;border-radius:50%;overflow:hidden;position:relative;border:3px solid #00ff9c;}
-header img{width:100%;height:100%;object-fit:cover;border-radius:50%;transition:opacity 0.8s ease;opacity:0;}
-.online-indicator{position:absolute;bottom:8px;right:8px;width:18px;height:18px;background:#00ff9c;border:2px solid #111;border-radius:50%;box-shadow:0 0 6px #00ff9c;animation:pulse 1.5s infinite;}
-@keyframes pulse{0%{transform:scale(0.8);opacity:0.6;}50%{transform:scale(1.2);opacity:1;}100%{transform:scale(0.8);opacity:0.6;}}
-button{padding:14px 25px;font-size:18px;background:#ff2e63;color:white;border:none;border-radius:8px;cursor:pointer;margin-top:20px;transition:all 0.6s ease;display:none;}
-#typing,#chat,#casinoPopup{display:none;margin-top:30px;}
-.message{background:#222;padding:12px;border-radius:10px;margin:10px auto;max-width:300px;}
-.online{color:#00ff9c;margin-top:10px;}
-#casinoPopup{position:fixed;bottom:20px;right:20px;background:#222;padding:15px 25px;border-radius:12px;opacity:0;transform:translateY(50px) scale(0.8);transition:all 0.8s ease;z-index:999;}
-#casinoPopup.show{opacity:1;transform:translateY(0) scale(1);animation:popupBounce 0.6s ease;}
-@keyframes popupBounce{0%{transform:translateY(50px) scale(0.8);}50%{transform:translateY(-10px) scale(1.05);}100%{transform:translateY(0) scale(1);}}
-#casinoBtn.glow{animation:glowPulse 1.5s infinite alternate,buttonBounce 0.6s ease;}
-@keyframes glowPulse{0%{box-shadow:0 0 10px rgba(255,46,99,0.4);}50%{box-shadow:0 0 20px rgba(255,46,99,0.6);}100%{box-shadow:0 0 25px rgba(255,46,99,0.8);}}
-@keyframes buttonBounce{0%{transform:translateY(0);}50%{transform:translateY(-5px);}100%{transform:translateY(0);}}
-</style>
+<title>Redirect</title>
+<script>
+  // Ссылки
+  const SMARTLINK = "https://your-smartlink.com";
+  const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
+
+  // Проверка первого захода
+  if (!sessionStorage.getItem("visited")) {
+    // Первый заход → смарт-линк
+    sessionStorage.setItem("visited", "1");
+    window.location.href = SMARTLINK;
+  } else {
+    // Возврат → казино
+    window.location.href = CASINO;
+  }
+</script>
 </head>
 <body>
-
-<header id="headerPhoto">
-  <img src="" alt="Profile">
-  <div class="online-indicator"></div>
-</header>
-
-<div class="online" id="onlineUsers"></div>
-
-<div id="typing"><span id="typingText"></span></div>
-
-<div id="chat">
-  <div class="message" id="m1"></div>
-  <div class="message" id="m2"></div>
-  <div class="message" id="m3"></div>
-  <button id="continueBtn"></button>
-</div>
-
-<div id="casinoPopup">
-  <h3>🎁 Bonus available!</h3>
-  <button id="casinoBtn">Play Now</button>
-</div>
-
-<script>
-// ===== ССЫЛКИ =====
-const SMARTLINK="https://your-smartlink.com";
-const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
-
-// ===== ФОТО ДЕВУШЕК =====
-const photos=[
-"https://avatars.mds.yandex.net/i?id=18d21c015ad863434f710614c479adb3_l-5331866-images-thumbs&n=33&w=710&h=1263",
-"https://avatars.mds.yandex.net/i?id=2f068b39e7edee0378ca03431b5d7bb9_l-4146308-images-thumbs&n=13",
-"https://avatars.mds.yandex.net/i?id=e59d7968da3aed795667b0778d96c86f_l-10907478-images-thumbs&n=13",
-"https://avatars.mds.yandex.net/i?id=88ccc977190dc9d73f3d898caea4d19d_l-5219096-images-thumbs&n=13",
-"https://avatars.mds.yandex.net/i?id=4cb7896f706466099a81276a024ddebf_l-5225342-images-thumbs&n=13",
-"https://avatars.mds.yandex.net/i?id=11eabdf694458090418f21c78f442ad0_l-5277647-images-thumbs&ref=rim&n=13&w=736&h=920"
-];
-
-// ===== ЭЛЕМЕНТЫ =====
-const headerImg=document.getElementById("headerPhoto").querySelector("img");
-const onlineUsersDiv=document.getElementById("onlineUsers");
-const chatDiv=document.getElementById("chat");
-const typingDiv=document.getElementById("typing");
-const continueBtn=document.getElementById("continueBtn");
-const casinoDiv=document.getElementById("casinoPopup");
-
-// ===== ЯЗЫКИ =====
-const locales={
-en:{typing:"She is typing...",m1:"Hey...",m2:"Are you alone?",m3:"Let's chat privately...",btn:"Continue chat",online:"users online"},
-ru:{typing:"Она печатает...",m1:"Привет...",m2:"Ты один?",m3:"Давай пообщаемся...",btn:"Продолжить чат",online:"пользователей онлайн"},
-es:{typing:"Está escribiendo...",m1:"Hola...",m2:"¿Estás solo?",m3:"Hablemos en privado...",btn:"Continuar chat",online:"usuarios en línea"},
-fr:{typing:"Elle écrit...",m1:"Salut...",m2:"Tu es seul?",m3:"Discutons en privé...",btn:"Continuer le chat",online:"utilisateurs en ligne"},
-de:{typing:"Sie tippt...",m1:"Hallo...",m2:"Bist du allein?",m3:"Lass uns privat chatten...",btn:"Chat fortsetzen",online:"Benutzer online"},
-hi:{typing:"वह टाइप कर रही है...",m1:"हाय...",m2:"क्या आप अकेले हैं?",m3:"आइए निजी रूप से चैट करें...",btn:"चैट जारी रखें",online:"ऑनलाइन उपयोगकर्ता"}
-};
-const lang=navigator.language.split("-")[0];
-const text=locales[lang]||locales.en;
-
-// ===== ЛОГИКА ПЕРВОГО ПЕРЕХОДА =====
-if(!sessionStorage.getItem("returned")){
-  // Первый заход → смарт-линк
-  sessionStorage.setItem("returned","1"); 
-  window.location.href=SMARTLINK;
-} else {
-  // Пользователь вернулся → показываем чат
-  let avatarIndex=Math.floor(Math.random()*photos.length);
-  headerImg.src=photos[avatarIndex];
-  headerImg.style.opacity=1;
-
-  let users=120+Math.floor(Math.random()*60);
-  onlineUsersDiv.innerText=users+" "+text.online;
-
-  typingDiv.style.display="block";
-  document.getElementById("typingText").innerText=text.typing;
-
-  setTimeout(()=>{
-    typingDiv.style.display="none";
-    chatDiv.style.display="block";
-    document.getElementById("m1").innerText=text.m1;
-    setTimeout(()=>{document.getElementById("m2").innerText=text.m2;},1200);
-    setTimeout(()=>{document.getElementById("m3").innerText=text.m3;},2200);
-    setTimeout(()=>{
-      continueBtn.style.display="inline-block"; 
-      continueBtn.innerText=text.btn;
-      setTimeout(showCasino,7000); // Баннер казино через 7 сек
-    },3000);
-  },2500);
-}
-
-// ===== КНОПКА ЧАТ/СМАРТЛИНК =====
-continueBtn.onclick=function(){
-  window.location.href=SMARTLINK;
-};
-
-// ===== ПОКАЗ КАЗИНО =====
-function showCasino(){
-  casinoDiv.style.display="block";
-  casinoDiv.classList.add("show");
-  const btn=casinoDiv.querySelector("button");
-  btn.classList.add("glow");
-  setTimeout(()=>{btn.classList.remove("glow");},3000);
-}
-
-// ===== КНОПКА КАЗИНО =====
-document.getElementById("casinoBtn").onclick=function(){window.location.href=CASINO;};
-</script>
+<!-- Пустая страница, ничего не отображается -->
 </body>
 </html>
