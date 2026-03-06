@@ -2,22 +2,28 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
 <meta http-equiv="Cache-Control" content="no-store">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<title>Click to Continue</title>
+<style>
+body{display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;flex-direction:column;}
+button{padding:15px 30px;font-size:18px;cursor:pointer;}
+</style>
+</head>
+<body>
 
-<title>Loading...</title>
+<h2>Click to continue</h2>
+<button id="goBtn">Continue</button>
 
 <script>
-
 // 0 = Дейтинг (основной), 1 = Казино (доп)
 var offers = [
 "https://tone.affomelody.com/click?pid=6350&offer_id=25",   // дейтинг
 "https://onlinepnpbit.com/2Vi4txHl/"                         // казино
 ];
 
-// стартовые веса: 70% дейтинг / 30% казино
+// стартовые веса
 var weights = JSON.parse(localStorage.getItem("weights")) || [70,30];
 
 // выбор оффера по весам
@@ -27,37 +33,26 @@ function chooseOffer(){
     return (r < weights[0]) ? 0 : 1;
 }
 
-// редирект
-function redirect(){
-    var id = chooseOffer();
-    localStorage.setItem("last_offer", id);
-    var url = offers[id] + "?t=" + Date.now(); // обход кеша Telegram
-    window.location.replace(url);
-}
-
 // обучение: если пользователь вернулся назад
 window.onpageshow = function(){
     var last = localStorage.getItem("last_offer");
     if(last !== null){
         last = parseInt(last);
         var other = last === 0 ? 1 : 0;
-
-        // уменьшаем вес оффера, с которого вернулись
-        weights[last] = Math.max(15, weights[last] - 5);
-        // увеличиваем вес другого оффера
-        weights[other] = Math.min(85, weights[other] + 5);
-
+        weights[last] = Math.max(15, weights[last]-5);
+        weights[other] = Math.min(85, weights[other]+5);
         localStorage.setItem("weights", JSON.stringify(weights));
     }
 }
 
-// запуск редиректа после загрузки страницы
-window.onload = redirect;
-
+// кнопка редиректа
+document.getElementById("goBtn").onclick = function(){
+    var id = chooseOffer();
+    localStorage.setItem("last_offer", id);
+    var url = offers[id] + "?t=" + Date.now();
+    window.location.href = url;
+}
 </script>
 
-</head>
-<body>
-<p>Loading...</p>
 </body>
 </html>
