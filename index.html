@@ -68,20 +68,31 @@ const typingDiv=document.getElementById("typing");
 const continueBtn=document.getElementById("continueBtn");
 const casinoDiv=document.getElementById("casinoPopup");
 
-// ===== ЯЗЫК =====
-const locales={en:{typing:"She is typing...",m1:"Hey...",m2:"Are you alone?",m3:"Let's chat privately...",btn:"Continue chat",online:"users online"},ru:{typing:"Она печатает...",m1:"Привет...",m2:"Ты один?",m3:"Давай пообщаемся...",btn:"Продолжить чат",online:"пользователей онлайн"}};
-const lang=navigator.language.split("-")[0];
-const text=locales[lang]||locales.en;
+// ===== ЯЗЫКИ =====
+const locales={
+  en:{typing:"She is typing...", m1:"Hey...", m2:"Are you alone?", m3:"Let's chat privately...", btn:"Continue chat", online:"users online"},
+  ru:{typing:"Она печатает...", m1:"Привет...", m2:"Ты один?", m3:"Давай пообщаемся...", btn:"Продолжить чат", online:"пользователей онлайн"},
+  es:{typing:"Ella está escribiendo...", m1:"Hola...", m2:"¿Estás solo?", m3:"Hablemos en privado...", btn:"Continuar chat", online:"usuarios en línea"},
+  fr:{typing:"Elle écrit...", m1:"Salut...", m2:"Tu es seul?", m3:"Discutons en privé...", btn:"Continuer le chat", online:"utilisateurs en ligne"},
+  de:{typing:"Sie tippt...", m1:"Hey...", m2:"Bist du allein?", m3:"Lass uns privat chatten...", btn:"Chat fortsetzen", online:"Benutzer online"},
+  pt:{typing:"Ela está digitando...", m1:"Oi...", m2:"Está sozinho?", m3:"Vamos conversar em privado...", btn:"Continuar chat", online:"usuários online"},
+  it:{typing:"Sta scrivendo...", m1:"Ciao...", m2:"Sei solo?", m3:"Parliamo in privato...", btn:"Continua chat", online:"utenti online"},
+  hi:{typing:"वह टाइप कर रही है...", m1:"हाय...", m2:"क्या आप अकेले हैं?", m3:"आइए निजी रूप से चैट करें...", btn:"चैट जारी रखें", online:"ऑनलाइन उपयोगकर्ता"},
+  ja:{typing:"彼女は入力中...", m1:"こんにちは...", m2:"一人ですか？", m3:"プライベートでチャットしましょう...", btn:"チャットを続ける", online:"オンラインユーザー"},
+  zh:{typing:"她正在输入...", m1:"嗨...", m2:"你一个人吗？", m3:"让我们私下聊聊...", btn:"继续聊天", online:"在线用户"}
+};
 
-// ===== АВАТАРКА + ЧИСЛО ПОЛЬЗОВАТЕЛЕЙ ПРИ ЗАХОДЕ =====
-function setInitialAvatar(){
-  const nextPhoto=photos[Math.floor(Math.random()*photos.length)];
-  headerImg.src=nextPhoto;
-  headerImg.style.opacity=1;
-  let users=120+Math.floor(Math.random()*60);
-  onlineUsersDiv.innerText=users+" "+text.online;
-}
-setInitialAvatar();
+const lang=navigator.language.split("-")[0];
+const text=locales[lang] || locales.en;
+
+// ===== УСТАНОВКА АВАТАРКИ ПРИ ПЕРВОМ ЗАХОДЕ =====
+let avatarIndex=Math.floor(Math.random()*photos.length);
+headerImg.src=photos[avatarIndex];
+headerImg.style.opacity=1;
+
+// ===== ONLINE USERS =====
+let users=120+Math.floor(Math.random()*60);
+onlineUsersDiv.innerText=users+" "+text.online;
 
 // ===== TYPING И CHAT =====
 typingDiv.style.display="block";
@@ -93,15 +104,18 @@ setTimeout(()=>{
   document.getElementById("m1").innerText=text.m1;
   setTimeout(()=>{document.getElementById("m2").innerText=text.m2;},1200);
   setTimeout(()=>{document.getElementById("m3").innerText=text.m3;},2200);
-  setTimeout(()=>{continueBtn.style.display="inline-block"; continueBtn.innerText=text.btn;},3000);
+  setTimeout(()=>{
+    continueBtn.style.display="inline-block"; 
+    continueBtn.innerText=text.btn;
+    // ===== ПОЯВЛЕНИЕ БАННЕРА КАЗИНО ЧЕРЕЗ 7 СЕК =====
+    setTimeout(showCasino,7000);
+  },3000);
 },2500);
 
 // ===== ПЕРЕХОД НА DATING =====
-continueBtn.onclick=function(){
-  window.location.href=DATING;
-};
+continueBtn.onclick=function(){window.location.href=DATING;};
 
-// ===== БАННЕР КАЗИНО =====
+// ===== ПОКАЗ БАННЕРА КАЗИНО =====
 function showCasino(){
   casinoDiv.style.display="block";
   casinoDiv.classList.add("show");
@@ -110,13 +124,8 @@ function showCasino(){
   setTimeout(()=>{btn.classList.remove("glow");},3000);
 }
 
-// ===== ПОЯВЛЕНИЕ БАННЕРА ЧЕРЕЗ 5-6 СЕК =====
-setTimeout(showCasino,5500);
-
 // ===== КНОПКА КАЗИНО =====
-document.getElementById("casinoBtn").onclick=function(){
-  window.location.href=CASINO;
-};
+document.getElementById("casinoBtn").onclick=function(){window.location.href=CASINO;};
 </script>
 </body>
 </html>
