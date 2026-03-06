@@ -10,7 +10,7 @@ header{width:120px;height:120px;margin:0 auto 20px;border-radius:50%;overflow:hi
 header img{width:100%;height:100%;object-fit:cover;border-radius:50%;transition:opacity 0.8s ease;opacity:0;}
 .online-indicator{position:absolute;bottom:8px;right:8px;width:18px;height:18px;background:#00ff9c;border:2px solid #111;border-radius:50%;box-shadow:0 0 6px #00ff9c;animation:pulse 1.5s infinite;}
 @keyframes pulse{0%{transform:scale(0.8);opacity:0.6;}50%{transform:scale(1.2);opacity:1;}100%{transform:scale(0.8);opacity:0.6;}}
-button{padding:14px 25px;font-size:18px;background:#ff2e63;color:white;border:none;border-radius:8px;cursor:pointer;margin-top:20px;transition:all 0.6s ease;}
+button{padding:14px 25px;font-size:18px;background:#ff2e63;color:white;border:none;border-radius:8px;cursor:pointer;margin-top:20px;transition:all 0.6s ease;display:none;}
 #typing,#chat,#casinoPopup{display:none;margin-top:30px;}
 .message{background:#222;padding:12px;border-radius:10px;margin:10px auto;max-width:300px;}
 .online{color:#00ff9c;margin-top:10px;}
@@ -65,48 +65,44 @@ const headerImg=document.getElementById("headerPhoto").querySelector("img");
 const onlineUsersDiv=document.getElementById("onlineUsers");
 const chatDiv=document.getElementById("chat");
 const typingDiv=document.getElementById("typing");
+const continueBtn=document.getElementById("continueBtn");
 const casinoDiv=document.getElementById("casinoPopup");
-
-// ===== АВАТАРКА + ОНЛАЙН =====
-function updateAvatarAndUsers(){
-  const nextPhoto=photos[Math.floor(Math.random()*photos.length)];
-  headerImg.style.opacity=0;
-  setTimeout(()=>{headerImg.src=nextPhoto;headerImg.style.opacity=1;},300);
-  let users=120+Math.floor(Math.random()*60);
-  onlineUsersDiv.innerText=users+" users online";
-}
-updateAvatarAndUsers();
-setInterval(updateAvatarAndUsers,10000);
 
 // ===== ЯЗЫК =====
 const locales={en:{typing:"She is typing...",m1:"Hey...",m2:"Are you alone?",m3:"Let's chat privately...",btn:"Continue chat",online:"users online"},ru:{typing:"Она печатает...",m1:"Привет...",m2:"Ты один?",m3:"Давай пообщаемся...",btn:"Продолжить чат",online:"пользователей онлайн"}};
 const lang=navigator.language.split("-")[0];
 const text=locales[lang]||locales.en;
 
-// ===== TYPING =====
+// ===== АВАТАРКА + ЧИСЛО ПОЛЬЗОВАТЕЛЕЙ ПРИ ЗАХОДЕ =====
+function setInitialAvatar(){
+  const nextPhoto=photos[Math.floor(Math.random()*photos.length)];
+  headerImg.src=nextPhoto;
+  headerImg.style.opacity=1;
+  let users=120+Math.floor(Math.random()*60);
+  onlineUsersDiv.innerText=users+" "+text.online;
+}
+setInitialAvatar();
+
+// ===== TYPING И CHAT =====
 typingDiv.style.display="block";
 document.getElementById("typingText").innerText=text.typing;
-setTimeout(startChat,2000);
 
-// ===== CHAT =====
-function startChat(){
+setTimeout(()=>{
   typingDiv.style.display="none";
   chatDiv.style.display="block";
-  setTimeout(()=>{document.getElementById("m1").innerText=text.m1;},800);
-  setTimeout(()=>{document.getElementById("m2").innerText=text.m2;},2000);
-  setTimeout(()=>{document.getElementById("m3").innerText=text.m3;},3500);
-}
-document.getElementById("continueBtn").innerText=text.btn;
+  document.getElementById("m1").innerText=text.m1;
+  setTimeout(()=>{document.getElementById("m2").innerText=text.m2;},1200);
+  setTimeout(()=>{document.getElementById("m3").innerText=text.m3;},2200);
+  setTimeout(()=>{continueBtn.style.display="inline-block"; continueBtn.innerText=text.btn;},3000);
+},2500);
 
 // ===== ПЕРЕХОД НА DATING =====
-document.getElementById("continueBtn").onclick=function(){
+continueBtn.onclick=function(){
   window.location.href=DATING;
 };
 
-// ===== КАЗИНО ПЛАВНО =====
+// ===== БАННЕР КАЗИНО =====
 function showCasino(){
-  casinoDiv.classList.remove("show");
-  void casinoDiv.offsetWidth; // перезапуск анимации
   casinoDiv.style.display="block";
   casinoDiv.classList.add("show");
   const btn=casinoDiv.querySelector("button");
@@ -114,8 +110,8 @@ function showCasino(){
   setTimeout(()=>{btn.classList.remove("glow");},3000);
 }
 
-// ===== ПОКАЗ КАЗИНО ПРИ ЗАГРУЗКЕ =====
-setTimeout(showCasino,2000); // сразу через 2 сек после загрузки
+// ===== ПОЯВЛЕНИЕ БАННЕРА ЧЕРЕЗ 5-6 СЕК =====
+setTimeout(showCasino,5500);
 
 // ===== КНОПКА КАЗИНО =====
 document.getElementById("casinoBtn").onclick=function(){
