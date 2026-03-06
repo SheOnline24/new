@@ -21,6 +21,13 @@ body{
   justify-content:center;
   gap:10px;
   margin-bottom:20px;
+  opacity:0;
+  transform:translateY(-20px);
+  transition:opacity 1s ease, transform 1s ease;
+}
+#header.show{
+  opacity:1;
+  transform:translateY(0);
 }
 #header img{
   width:50px;
@@ -31,6 +38,7 @@ body{
 .onlineUsers{
   font-size:18px;
   color:#00ff9c;
+  transition: transform 0.2s ease;
 }
 button{
   padding:14px 25px;
@@ -88,7 +96,8 @@ const girls=[
   "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80",
   "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80"
 ];
-document.getElementById("girlImg").src=girls[Math.floor(Math.random()*girls.length)];
+const girlImg=document.getElementById("girlImg");
+girlImg.src=girls[Math.floor(Math.random()*girls.length)];
 
 // ===== ЯЗЫКИ =====
 const locales={
@@ -99,10 +108,16 @@ const locales={
 const lang=navigator.language.split("-")[0];
 const text=locales[lang]||locales.en;
 
+// ===== АНИМАЦИЯ ШАПКИ =====
+window.addEventListener("load",()=>{ document.getElementById("header").classList.add("show"); });
+
 // ===== ONLINE USERS =====
+const onlineEl=document.getElementById("onlineUsers");
 function updateOnline(){
   let users=120+Math.floor(Math.random()*60);
-  document.getElementById("onlineUsers").innerText=users+" "+text.online;
+  onlineEl.innerText=users+" "+text.online;
+  onlineEl.style.transform="scale(1.3)";
+  setTimeout(()=>{ onlineEl.style.transform="scale(1)"; },200);
 }
 updateOnline();
 setInterval(updateOnline,5000);
@@ -155,6 +170,5 @@ document.getElementById("casinoBtn").onclick=function(){
   window.location.href=CASINO;
 };
 </script>
-
 </body>
 </html>
