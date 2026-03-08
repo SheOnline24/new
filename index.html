@@ -14,7 +14,7 @@ background:#0e1621;
 color:white;
 }
 
-/* TOP BAR */
+/* TOP */
 
 .topbar{
 display:flex;
@@ -47,11 +47,16 @@ font-size:12px;
 color:#5cff7a;
 }
 
+#onlineCount{
+font-size:12px;
+color:#aaa;
+}
+
 /* CHAT */
 
 #chat{
 padding:15px;
-margin-bottom:100px;
+margin-bottom:120px;
 }
 
 .msg{
@@ -61,6 +66,12 @@ border-radius:10px;
 margin:8px 0;
 max-width:240px;
 animation:fade .4s;
+}
+
+.msg img{
+width:100%;
+border-radius:10px;
+margin-top:5px;
 }
 
 @keyframes fade{
@@ -89,7 +100,7 @@ text-align:center;
 
 button{
 
-padding:14px 30px;
+padding:15px 34px;
 font-size:18px;
 border:none;
 border-radius:30px;
@@ -108,20 +119,29 @@ display:none;
 
 @keyframes pulse{
 
-0%{transform:scale(1);box-shadow:0 0 10px rgba(255,46,99,0.5);}
-50%{transform:scale(1.08);box-shadow:0 0 25px rgba(255,46,99,1);}
-100%{transform:scale(1);box-shadow:0 0 10px rgba(255,46,99,0.5);}
+0%{transform:scale(1)}
+50%{transform:scale(1.08)}
+100%{transform:scale(1)}
 
 }
 
-button:hover{
-transform:scale(1.15);
+/* HEART */
+
+.heart{
+position:fixed;
+bottom:90px;
+font-size:20px;
+animation:heartUp 2s linear forwards;
 }
 
-/* NOTIFICATION */
+@keyframes heartUp{
+0%{opacity:1;transform:translateY(0)}
+100%{opacity:0;transform:translateY(-120px)}
+}
+
+/* NOTIFY */
 
 #notify{
-
 position:fixed;
 top:20px;
 right:20px;
@@ -130,15 +150,14 @@ padding:10px 15px;
 border-radius:8px;
 font-size:14px;
 display:none;
-
 }
 
-/* CASINO BANNER */
+/* CASINO */
 
 #casino{
 
 position:fixed;
-bottom:110px;
+bottom:120px;
 right:20px;
 
 background:linear-gradient(45deg,#ff2e63,#ff9a00);
@@ -161,11 +180,9 @@ animation:casinoPulse 2s infinite;
 }
 
 @keyframes casinoPulse{
-
-0%{transform:scale(1);box-shadow:0 0 12px rgba(255,80,80,0.6);}
-50%{transform:scale(1.08);box-shadow:0 0 30px rgba(255,120,0,1);}
-100%{transform:scale(1);box-shadow:0 0 12px rgba(255,80,80,0.6);}
-
+0%{transform:scale(1)}
+50%{transform:scale(1.08)}
+100%{transform:scale(1)}
 }
 
 </style>
@@ -183,6 +200,7 @@ animation:casinoPulse 2s infinite;
 <div>
 <div class="name" id="name"></div>
 <div class="online">online</div>
+<div id="onlineCount"></div>
 </div>
 
 </div>
@@ -195,26 +213,24 @@ animation:casinoPulse 2s infinite;
 <button id="btn">Continue chat ❤️</button>
 </div>
 
-<div id="notify">💬 New message</div>
+<div id="notify">💬 2 new messages</div>
 
 <div id="casino">🎰 100% Casino Bonus</div>
 
 <script>
 
-/* ССЫЛКИ */
+/* LINKS */
 
 const DATING="https://kfl2prr.datelovelygirls.com/vv6pzuc?s1=Online24";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
-
-/* АВАТАР */
+/* AVATAR */
 
 let avatarId=Math.floor(Math.random()*90);
 
 document.getElementById("avatar").src="https://randomuser.me/api/portraits/women/"+avatarId+".jpg";
 
-
-/* ИМЕНА */
+/* NAMES */
 
 const names=["Anna","Mila","Sofia","Emma","Lena","Julia","Sara","Laura","Nina"];
 
@@ -222,66 +238,29 @@ let girl=names[Math.floor(Math.random()*names.length)];
 
 document.getElementById("name").innerText=girl;
 
+/* ONLINE */
 
-/* ЯЗЫК */
+let online=Math.floor(Math.random()*240)+180;
 
-let lang=navigator.language.slice(0,2);
+document.getElementById("onlineCount").innerText=online+" users online";
 
-
-/* ДИАЛОГИ */
-
-const dialogs={
-
-en:[
-
-["Hey 😉","I saw you here...","Are you alone tonight?"],
-
-["Hi... you look interesting 😘","Where are you from?","Want to chat privately?"],
-
-["Hey handsome 😏","I was checking your profile","Can we talk in private?"]
-
-],
-
-ru:[
-
-["Привет 😉","Я тебя здесь заметила","Ты один сегодня?"],
-
-["Привет 😘","Ты выглядишь интересно","Хочешь пообщаться?"],
-
-["Хей 😏","Мне понравился твой профиль","Пойдём в приват?"]
-
-]
-
-};
-
-if(!dialogs[lang]) lang="en";
-
-/* РАНДОМНЫЙ ДИАЛОГ */
-
-let msgs=dialogs[lang][Math.floor(Math.random()*dialogs[lang].length)];
-
+/* CHAT */
 
 let chat=document.getElementById("chat");
-
 let typing=document.getElementById("typing");
-
 let btn=document.getElementById("btn");
 
-
-function addMsg(t){
+function msg(t){
 
 let d=document.createElement("div");
-
 d.className="msg";
-
-d.innerText=t;
+d.innerHTML=t;
 
 chat.appendChild(d);
 
 }
 
-
-/* ЧАТ */
+/* START CHAT */
 
 function start(){
 
@@ -290,8 +269,25 @@ typing.style.display="block";
 setTimeout(()=>{
 
 typing.style.display="none";
+msg("Hey 😉");
 
-addMsg(msgs[0]);
+setTimeout(()=>{
+
+typing.style.display="block";
+
+setTimeout(()=>{
+
+typing.style.display="none";
+msg("I saw you here...");
+
+setTimeout(()=>{
+
+typing.style.display="block";
+
+setTimeout(()=>{
+
+typing.style.display="none";
+msg("You look interesting 😘");
 
 setTimeout(()=>{
 
@@ -301,7 +297,7 @@ setTimeout(()=>{
 
 typing.style.display="none";
 
-addMsg(msgs[1]);
+msg('Look at me 😏 <img src="https://randomuser.me/api/portraits/women/'+avatarId+'.jpg">');
 
 setTimeout(()=>{
 
@@ -310,10 +306,13 @@ typing.style.display="block";
 setTimeout(()=>{
 
 typing.style.display="none";
-
-addMsg(msgs[2]);
+msg("Do you want to chat privately? ❤️");
 
 btn.style.display="inline-block";
+
+},1200);
+
+},1600);
 
 },1200);
 
@@ -329,8 +328,7 @@ btn.style.display="inline-block";
 
 setTimeout(start,2000);
 
-
-/* КНОПКА */
+/* BUTTON */
 
 btn.onclick=()=>{
 
@@ -338,8 +336,27 @@ window.location.href=DATING;
 
 }
 
+/* HEARTS */
 
-/* УВЕДОМЛЕНИЕ */
+btn.addEventListener("mouseover",()=>{
+
+for(let i=0;i<3;i++){
+
+let h=document.createElement("div");
+h.className="heart";
+h.innerText="❤️";
+
+h.style.left=(window.innerWidth/2+Math.random()*80-40)+"px";
+
+document.body.appendChild(h);
+
+setTimeout(()=>h.remove(),2000);
+
+}
+
+});
+
+/* NOTIFY */
 
 setTimeout(()=>{
 
@@ -347,8 +364,7 @@ document.getElementById("notify").style.display="block";
 
 },3500);
 
-
-/* КАЗИНО через 12 секунд */
+/* CASINO */
 
 setTimeout(()=>{
 
