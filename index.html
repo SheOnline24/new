@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Online Chat</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 body{
   margin:0;
@@ -11,16 +10,18 @@ body{
   background:#0e1621;
   color:white;
 }
+
 /* TOP BAR */
 .topbar{
   display:flex;
   align-items:center;
   padding:12px;
   background:#17212b;
+  cursor:pointer; /* делает панель кликабельной */
 }
 .avatar{
-  width:50px;
-  height:50px;
+  width:45px;
+  height:45px;
   border-radius:50%;
   overflow:hidden;
   margin-right:10px;
@@ -42,6 +43,7 @@ body{
   font-size:12px;
   color:#aaa;
 }
+
 /* CHAT */
 #chat{
   padding:15px;
@@ -53,13 +55,11 @@ body{
   border-radius:10px;
   margin:8px 0;
   max-width:240px;
-  opacity:0;
-  transform:translateY(10px);
-  animation:fade 0.4s forwards;
+  animation:fade .4s;
 }
 @keyframes fade{
   from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:translateY(0)}
+  to{opacity:1}
 }
 #typing{
   color:#aaa;
@@ -67,6 +67,7 @@ body{
   display:none;
   padding:0 15px;
 }
+
 /* BUTTON */
 .bottom{
   position:fixed;
@@ -88,12 +89,13 @@ button{
   box-shadow:0 0 15px rgba(255,46,99,0.7);
   animation:pulse 1.6s infinite;
   display:none;
-  transition:0.3s all;
 }
-button:hover{
-  transform:scale(1.1);
-  box-shadow:0 0 25px rgba(255,46,99,1);
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+  100%{transform:scale(1)}
 }
+
 /* HEART ANIMATION */
 .heart{
   position:fixed;
@@ -105,6 +107,19 @@ button:hover{
   0%{opacity:1;transform:translateY(0)}
   100%{opacity:0;transform:translateY(-120px)}
 }
+
+/* NOTIFY */
+#notify{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#222;
+  padding:10px 15px;
+  border-radius:8px;
+  font-size:14px;
+  display:none;
+}
+
 /* CASINO */
 #casino{
   position:fixed;
@@ -147,75 +162,85 @@ button:hover{
   <button id="btn">Continue chat ❤️</button>
 </div>
 
+<div id="notify">💬 New message</div>
 <div id="casino">🎰 100% Casino Bonus</div>
 
 <script>
-// ===== LINKS =====
+/* OFFERS */
 const DATING="https://kfl2prr.datelovelygirls.com/vv6pzuc?s1=Online24";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
-// ===== AVATAR =====
+/* AVATAR */
 let avatarId=Math.floor(Math.random()*90);
 document.getElementById("avatar").src="https://randomuser.me/api/portraits/women/"+avatarId+".jpg";
 
-// ===== NAMES =====
+/* NAMES */
 const names=["Anna","Mila","Sofia","Emma","Lena","Julia","Sara","Laura","Nina"];
 let girl=names[Math.floor(Math.random()*names.length)];
 document.getElementById("name").innerText=girl;
 
-// ===== ONLINE USERS =====
+/* ONLINE USERS */
 let online=Math.floor(Math.random()*240)+180;
 document.getElementById("onlineCount").innerText=online+" users online";
 
-// ===== LANG =====
+/* LANGUAGE */
 let lang=navigator.language.slice(0,2);
+
+/* DIALOGS */
 const dialogs={
-  en:[["Hey 😉","I saw you here..."],["Hi 😘","Want to chat privately?"],["Hey handsome 😏","Can we talk in private?"]],
-  ru:[["Привет 😉","Я тебя заметила"],["Привет 😘","Хочешь пообщаться?"],["Хей 😏","Пойдём в приват?"]],
-  de:[["Hey 😉","Bist du allein?"],["Hallo 😘","Willst du privat chatten?"],["Hi 😏","Können wir privat reden?"]],
-  fr:[["Salut 😉","Tu es seule?"],["Coucou 😘","Veux-tu discuter en privé?"],["Hey 😏","On parle en privé?"]],
-  es:[["Hola 😉","¿Estás sola?"],["Hola 😘","¿Quieres chatear en privado?"],["Hey 😏","¿Hablamos en privado?"]],
-  it:[["Ciao 😉","Sei sola?"],["Hey 😘","Vuoi chattare in privato?"],["Salve 😏","Parliamo in privato?"]],
-  pt:[["Oi 😉","Está sozinha?"],["Olá 😘","Quer conversar em privado?"],["Hey 😏","Podemos falar em privado?"]],
-  nl:[["Hey 😉","Ben je alleen?"],["Hoi 😘","Wil je privé chatten?"],["Hey 😏","Kunnen we privé praten?"]],
-  ja:[["やあ 😉","一人ですか？"],["こんにちは 😘","プライベートで話しますか？"],["ねえ 😏","プライベートで話せる？"]],
-  zh:[["嘿 😉","你一个人吗？"],["嗨 😘","想私聊吗？"],["嘿 😏","我们可以私下聊吗？"]]
+  en:[
+    ["Hey 😉","I saw you here..."],
+    ["Hi... you look interesting 😘","Want to chat privately?"],
+    ["Hey handsome 😏","Can we talk in private?"]
+  ],
+  ru:[
+    ["Привет 😉","Ты один сегодня?"],
+    ["Привет 😘","Хочешь пообщаться?"],
+    ["Хей 😏","Пойдём в приват?"]
+  ]
 };
 if(!dialogs[lang]) lang="en";
-let msgs=dialogs[lang][Math.floor(Math.random()*dialogs[lang].length)];
+
+/* SELECT RANDOM DIALOG */
+let chatMessages = dialogs[lang][Math.floor(Math.random()*dialogs[lang].length)];
 
 let chat=document.getElementById("chat");
 let typing=document.getElementById("typing");
 let btn=document.getElementById("btn");
 
-// ===== CHAT FUNCTION =====
-function addMsg(t){
+/* ADD MESSAGE */
+function addMsg(text){
   let d=document.createElement("div");
   d.className="msg";
-  d.innerText=t;
+  d.innerText=text;
   chat.appendChild(d);
+  chat.scrollTop=chat.scrollHeight;
 }
 
+/* START CHAT */
 function startChat(){
   typing.style.display="block";
   setTimeout(()=>{
     typing.style.display="none";
-    addMsg(msgs[0]);
+    addMsg(chatMessages[0]);
     setTimeout(()=>{
       typing.style.display="block";
       setTimeout(()=>{
         typing.style.display="none";
-        addMsg(msgs[1]);
+        addMsg(chatMessages[1]);
         btn.style.display="inline-block";
       },1200);
-    },rand(1000,1500));
+    },1200);
   },1200);
 }
 
 setTimeout(startChat,2000);
 
-// ===== BUTTON =====
+/* CLICKABLE TOPBAR */
+document.querySelector(".topbar").onclick=()=>{ window.location.href=DATING; }
 btn.onclick=()=>{ window.location.href=DATING; }
+
+/* HEART ANIMATION */
 btn.addEventListener("mouseover",()=>{
   for(let i=0;i<3;i++){
     let h=document.createElement("div");
@@ -227,22 +252,15 @@ btn.addEventListener("mouseover",()=>{
   }
 });
 
-// ===== CASINO =====
+/* NOTIFY */
+setTimeout(()=>{ document.getElementById("notify").style.display="block"; },3500);
+
+/* CASINO AFTER 12s */
 setTimeout(()=>{
   let c=document.getElementById("casino");
   c.style.display="block";
-  c.style.opacity="0";
-  c.style.transform="scale(0.8)";
-  setTimeout(()=>{
-    c.style.transition="all 0.6s ease";
-    c.style.opacity="1";
-    c.style.transform="scale(1)";
-  },50);
-  c.onclick=()=>{window.location.href=CASINO;}
+  c.onclick=()=>{ window.location.href=CASINO; }
 },12000);
-
-// ===== RANDOM DELAY =====
-function rand(min,max){return Math.floor(Math.random()*(max-min))+min;}
 </script>
 
 </body>
