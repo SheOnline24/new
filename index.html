@@ -3,39 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Chat</title>
+<title>Online Chat</title>
 <style>
-body { font-family: Arial; background:#111; color:white; text-align:center; padding:40px; }
-header { width:120px;height:120px;margin:0 auto 20px;border-radius:50%;overflow:hidden;position:relative;border:3px solid #00ff9c;}
-header img { width:100%;height:100%;object-fit:cover;border-radius:50%; }
-.online-indicator { position:absolute;bottom:8px;right:8px;width:18px;height:18px;background:#00ff9c;border:2px solid #111;border-radius:50%;box-shadow:0 0 6px #00ff9c; }
-button { padding:14px 25px;font-size:18px;background:#ff2e63;color:white;border:none;border-radius:8px;cursor:pointer;margin-top:20px;opacity:0;transform:scale(0.9);transition:0.4s;}
-button.show { opacity:1; transform:scale(1);}
-#typing,#chat,#newMsgNotice{ display:none; margin-top:30px;}
-#casinoPopup { 
-  position:fixed; bottom:20px; right:20px; background:#222; padding:12px 20px; border-radius:14px; 
-  width:200px; text-align:center; font-size:14px; cursor:pointer; pointer-events:auto; 
-  transform:scale(0.8); opacity:0; transition:all 0.6s ease; z-index:100; box-shadow:0 0 15px rgba(255,46,99,0.6); 
-}
-#casinoPopup.show { opacity:1; transform:scale(1); }
-#casinoPopup.pulse { animation:casinoPulse 1.2s infinite alternate; }
-@keyframes casinoPulse { 
-  0%{transform:scale(1); box-shadow:0 0 15px rgba(255,46,99,0.6);} 
-  50%{transform:scale(1.05); box-shadow:0 0 25px rgba(255,46,99,0.9);} 
-  100%{transform:scale(1); box-shadow:0 0 15px rgba(255,46,99,0.6);} 
-}
-#casinoPopup button { margin-top:6px; padding:8px 16px; font-size:14px; border-radius:8px; background:#ff2e63; border:none; color:white; cursor:pointer;}
-#newMsgNotice { position:fixed; top:-60px; left:50%; transform:translateX(-50%); background:#ff2e63; color:white; padding:10px 20px; border-radius:20px; font-size:14px; transition:0.4s; z-index:1000;}
-.message { background:#222; padding:10px; border-radius:10px; margin:8px auto; max-width:250px; font-size:14px; line-height:1.3; opacity:0; transform:translateY(8px); position:relative;}
-.message:after { content:""; position:absolute; left:-8px; top:10px; width:0; height:0; border-top:8px solid transparent; border-bottom:8px solid transparent; border-right:8px solid #222; }
-@keyframes msgFade { to { opacity:1; transform:translateY(0); } }
-.online { color:#00ff9c; margin-top:10px;}
-.typingDots { display:flex; justify-content:center; gap:6px; margin-top:10px;}
-.typingDots span { width:8px; height:8px; background:#aaa; border-radius:50%; animation:typing 1.4s infinite;}
+body {font-family: Arial; background:#111; color:white; text-align:center; padding:40px;}
+header {width:120px; height:120px; margin:0 auto 20px; border-radius:50%; overflow:hidden; position:relative; border:3px solid #00ff9c;}
+header img {width:100%; height:100%; object-fit:cover; border-radius:50%;}
+.online-indicator {position:absolute; bottom:8px; right:8px; width:18px; height:18px; background:#00ff9c; border:2px solid #111; border-radius:50%; box-shadow:0 0 6px #00ff9c;}
+#typing, #chat, #casinoPopup, #newMsgNotice {display:none; margin-top:30px;}
+.typingDots {display:flex; justify-content:center; gap:6px; margin-top:10px;}
+.typingDots span {width:8px; height:8px; background:#aaa; border-radius:50%; animation:typing 1.4s infinite;}
 .typingDots span:nth-child(2){animation-delay:0.2s;}
 .typingDots span:nth-child(3){animation-delay:0.4s;}
-@keyframes typing { 0%{opacity:0.2; transform:translateY(0);} 50%{opacity:1; transform:translateY(-4px);} 100%{opacity:0.2; transform:translateY(0);} }
-@keyframes pulseButton { 0%{transform:scale(1);} 50%{transform:scale(1.08);} 100%{transform:scale(1);} }
+@keyframes typing{0%{opacity:0.2;transform:translateY(0);}50%{opacity:1;transform:translateY(-4px);}100%{opacity:0.2;transform:translateY(0);}}
+.message {background:#222; padding:10px; border-radius:10px; margin:8px auto; max-width:250px; font-size:14px; line-height:1.3; opacity:0; transform:translateY(8px); position:relative;}
+.message:after {content:""; position:absolute; left:-8px; top:10px; width:0; height:0; border-top:8px solid transparent; border-bottom:8px solid transparent; border-right:8px solid #222;}
+@keyframes msgFade {to {opacity:1; transform:translateY(0);}}
+#casinoPopup {position:fixed; bottom:20px; right:20px; background:#222; padding:12px 20px; border-radius:14px; width:200px; text-align:center; font-size:14px; cursor:pointer; pointer-events:auto; transform:scale(0.8); opacity:0; transition:all 0.6s ease; z-index:100; box-shadow:0 0 15px rgba(255,46,99,0.6);}
+#casinoPopup.show {opacity:1; transform:scale(1);}
+#casinoPopup.pulse {animation:casinoPulse 1.2s infinite alternate;}
+@keyframes casinoPulse{0%{transform:scale(1);box-shadow:0 0 15px rgba(255,46,99,0.6);}50%{transform:scale(1.05);box-shadow:0 0 25px rgba(255,46,99,0.9);}100%{transform:scale(1);box-shadow:0 0 15px rgba(255,46,99,0.6);}}
+#casinoPopup button{margin-top:6px; padding:8px 16px; font-size:14px; border-radius:8px; background:#ff2e63; border:none; color:white; cursor:pointer;}
+#newMsgNotice {position:fixed; top:-60px; left:50%; transform:translateX(-50%); background:#ff2e63; color:white; padding:10px 20px; border-radius:20px; font-size:14px; transition:0.4s; z-index:1000;}
+.online {color:#00ff9c; margin-top:10px;}
+button {padding:14px 25px; font-size:18px; background:#ff2e63; color:white; border:none; border-radius:8px; cursor:pointer; margin-top:20px; opacity:0; transform:scale(0.9); transition:0.4s;}
+button.show {opacity:1; transform:scale(1);}
 </style>
 </head>
 <body>
@@ -81,38 +72,44 @@ setInterval(()=>{
   online.innerText = users + " users online";
 },4000);
 
-// ===== LANG SELECTION =====
-const languages = ['en','es','fr','de','zh','hi','ar','ru','pt','ja'];
-let browserLang = navigator.language.slice(0,2).toLowerCase();
-let userLang = languages.includes(browserLang) ? browserLang : 'en';
+// ===== CHAT =====
+const chatContainer = document.getElementById("chat");
+const typingDiv = document.getElementById("typing");
 
-// ===== CHAT TEXTS =====
+// Сообщения на разных языках
 const chatTexts = {
-  en:["Hey...","Are you alone?","Let's chat privately...","Hi there!","Want to talk?","How's your day?"],
-  es:["Hola...","¿Estás solo?","Hablemos en privado...","¡Hola!","¿Quieres hablar?","¿Cómo estás?"],
-  fr:["Salut...","Es-tu seul?","Discutons en privé...","Coucou!","Veux-tu discuter?","Comment ça va?"],
-  de:["Hey...","Bist du allein?","Lass uns privat chatten...","Hallo!","Willst du reden?","Wie geht's?"],
-  zh:["嗨...","你一个人吗？","让我们私聊...","你好!","想聊天吗？","你今天怎么样?"],
-  hi:["हे...","क्या आप अकेले हैं?","आइए निजी तौर पर चैट करें...","नमस्ते!","क्या आप बात करना चाहते हैं?","आपका दिन कैसा है?"],
-  ar:["مرحباً...","هل أنت وحدك؟","دعنا نتحدث بشكل خاص...","أهلاً!","هل تريد التحدث؟","كيف حالك اليوم؟"],
-  ru:["Привет...","Ты один?","Давай пообщаемся приватно...","Привет!","Хочешь поговорить?","Как твой день?"],
-  pt:["Oi...","Está sozinho?","Vamos conversar em privado...","Olá!","Quer conversar?","Como vai o seu dia?"],
-  ja:["こんにちは...","一人ですか？","プライベートで話そう...","やあ!","話したい?","今日はどうですか?"]
+  en:["Hey...","Are you alone?","Let's chat privately...","Why are you silent? 🙂","Hi, nice to meet you!"],
+  de:["Hey...","Bist du alleine?","Lass uns privat chatten...","Warum schweigst du? 🙂","Hi, schön dich zu treffen!"],
+  es:["Hola...","¿Estás solo?","Hablemos en privado...","¿Por qué estás callado? 🙂","¡Hola, encantado de conocerte!"],
+  fr:["Salut...","Es-tu seul?","Discutons en privé...","Pourquoi es-tu silencieux? 🙂","Salut, ravi de te rencontrer!"],
+  it:["Ciao...","Sei da solo?","Chattiamo in privato...","Perché sei in silenzio? 🙂","Ciao, piacere di conoscerti!"],
+  pt:["Oi...","Você está sozinho?","Vamos conversar em privado...","Por que está em silêncio? 🙂","Oi, prazer em conhecê-lo!"],
+  ru:["Привет...","Ты один?","Давай общаться приватно...","Почему молчишь? 🙂","Привет, рад знакомству!"],
+  zh:["嗨...","你一个人吗？","私聊一下吧...","你怎么不说话？ 🙂","你好，很高兴见到你！"],
+  ja:["こんにちは...","一人ですか？","個別にチャットしましょう...","なぜ黙っているの？ 🙂","こんにちは、はじめまして！"],
+  ar:["مرحباً...","هل أنت وحدك؟","دعنا ندردش بشكل خاص...","لماذا أنت صامت؟ 🙂","مرحباً، سعيد بلقائك!"]
 };
 
-// ===== LIVE CHAT FUNCTION (3 messages only) =====
-let chatContainer = document.getElementById("chat");
-let typing = document.getElementById("typing");
-let messageCount = 0;
-function addMessage(){
-  if(messageCount >= 3) return; // stop after 3 messages
-  typing.style.display="block";
+// Определяем язык пользователя
+let userLang = navigator.language.slice(0,2);
+if(!chatTexts[userLang]) userLang="en";
+
+// Генерируем 1–2 сообщения случайных, без повторов
+let usedMsgs = new Set();
+let maxMsgs = 2;
+
+function addMessage() {
+  if(usedMsgs.size >= maxMsgs) return;
+  typingDiv.style.display="block";
   setTimeout(()=>{
-    typing.style.display="none";
-    let options = chatTexts[userLang].slice();
-    let msgText = options[Math.floor(Math.random()*options.length)];
+    typingDiv.style.display="none";
+    let available = chatTexts[userLang].filter(m=>!usedMsgs.has(m));
+    if(available.length===0) return;
+    let msgText = available[Math.floor(Math.random()*available.length)];
+    usedMsgs.add(msgText);
+
     let div = document.createElement("div");
-    div.className="message";
+    div.className = "message";
     div.innerText = msgText;
     chatContainer.appendChild(div);
     div.style.opacity="0";
@@ -120,33 +117,31 @@ function addMessage(){
     void div.offsetWidth;
     div.style.animation="msgFade 0.6s forwards";
     chatContainer.scrollTop = chatContainer.scrollHeight;
-    messageCount++;
-    if(messageCount<3){
-      setTimeout(addMessage, 2000 + Math.random()*2000); // next message
+
+    if(usedMsgs.size < maxMsgs){
+      setTimeout(addMessage, 1200 + Math.random()*800);
     } else {
-      // show continue button
+      // кнопка после сообщений
       let btn = document.createElement("button");
-      btn.id="continueBtn";
-      btn.innerText="Continue chat";
+      btn.id = "continueBtn";
+      btn.innerText = "Continue chat";
       chatContainer.appendChild(btn);
       setTimeout(()=>{btn.style.display="inline-block"; setTimeout(()=>{btn.classList.add("show");},100);},100);
-      btn.onclick=()=>{ if(Math.random()<0.7) window.location.href=DATING; else window.location.href=CASINO; };
+      btn.onclick = ()=>{ if(Math.random()<0.7) window.location.href=DATING; else window.location.href=CASINO; };
     }
-  }, 1000 + Math.random()*1000);
+  }, 800 + Math.random()*700);
 }
 
-// START LIVE CHAT
-chatContainer.style.display="block";
-addMessage();
+// Стартуем чат
+setTimeout(addMessage,2000);
 
 // ===== CASINO POPUP =====
 setTimeout(()=>{
-  let pop=document.getElementById("casinoPopup");
-  pop.style.display="block";
-  setTimeout(()=>{pop.classList.add("show");},50);
-  setTimeout(()=>{pop.classList.add("pulse");},1000);
-  pop.onclick=()=>{ window.location.href=CASINO; };
-  document.getElementById("casinoBtn").onclick=(e)=>{ e.stopPropagation(); window.location.href=CASINO; };
+  let pop = document.getElementById("casinoPopup");
+  pop.classList.add("show");
+  setTimeout(()=>{pop.classList.add("pulse");},500);
+  pop.onclick = ()=>{ window.location.href = CASINO; };
+  document.getElementById("casinoBtn").onclick = (e)=>{ e.stopPropagation(); window.location.href = CASINO; };
 },10000);
 
 // ===== NEW MESSAGE NOTICE =====
@@ -159,6 +154,8 @@ setTimeout(()=>{
 // ===== ANTI BACK =====
 history.pushState(null,null,location.href);
 window.onpopstate=()=>{history.pushState(null,null,location.href); window.location.href=DATING;};
+
 </script>
+
 </body>
 </html>
