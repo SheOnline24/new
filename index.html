@@ -1,208 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Online</title>
-
-<!-- ускорение загрузки внешних ресурсов -->
-<link rel="preconnect" href="https://randomuser.me">
-<link rel="preconnect" href="https://images.pexels.com">
-
 <style>
-
-body{
-font-family:Arial;
-background:#111;
-color:white;
-text-align:center;
-padding:40px;
-}
-
-header{
-width:120px;
-height:120px;
-margin:0 auto 20px;
-border-radius:50%;
-overflow:hidden;
-position:relative;
-border:3px solid #00ff9c;
-}
-
-header img{
-width:100%;
-height:100%;
-object-fit:cover;
-border-radius:50%;
-}
-
-.online-indicator{
-position:absolute;
-bottom:8px;
-right:8px;
-width:18px;
-height:18px;
-background:#00ff9c;
-border:2px solid #111;
-border-radius:50%;
-box-shadow:0 0 6px #00ff9c;
-}
-
-button{
-padding:14px 25px;
-font-size:18px;
-background:#ff2e63;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-margin-top:20px;
-opacity:0;
-transform:scale(0.9);
-transition:0.4s;
-}
-
-button.show{
-opacity:1;
-transform:scale(1);
-}
-
-#typing,#chat,#casinoPopup,#newMsgNotice{
-display:none;
-margin-top:30px;
-}
-
-#newMsgNotice{
-position:fixed;
-top:-60px;
-left:50%;
-transform:translateX(-50%);
-background:#ff2e63;
-color:white;
-padding:10px 20px;
-border-radius:20px;
-font-size:14px;
-transition:0.4s;
-z-index:1000;
-}
-
-.message{
-background:#222;
-padding:12px;
-border-radius:10px;
-margin:10px auto;
-max-width:300px;
-opacity:0;
-transform:translateY(10px);
-animation:msgFade 0.6s forwards;
-position:relative;
-}
-
-.message:after{
-content:"";
-position:absolute;
-left:-8px;
-top:10px;
-width:0;
-height:0;
-border-top:8px solid transparent;
-border-bottom:8px solid transparent;
-border-right:8px solid #222;
-}
-
-@keyframes msgFade{
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-.online{
-color:#00ff9c;
-margin-top:10px;
-}
-
-#casinoPopup{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#222;
-padding:15px 25px;
-border-radius:12px;
-cursor:pointer;
-display:none;
-}
-
-.typingDots{
-display:flex;
-justify-content:center;
-gap:6px;
-margin-top:10px;
-}
-
-.typingDots span{
-width:8px;
-height:8px;
-background:#aaa;
-border-radius:50%;
-animation:typing 1.4s infinite;
-}
-
-.typingDots span:nth-child(2){
-animation-delay:0.2s;
-}
-
-.typingDots span:nth-child(3){
-animation-delay:0.4s;
-}
-
-@keyframes typing{
-0%{opacity:0.2;transform:translateY(0);}
-50%{opacity:1;transform:translateY(-4px);}
-100%{opacity:0.2;transform:translateY(0);}
-}
-
-/* анимация подталкивания кнопки */
-@keyframes pulseButton{
-0%{transform:scale(1);}
-50%{transform:scale(1.08);}
-100%{transform:scale(1);}
-}
-
+body{font-family:Arial;background:#111;color:white;text-align:center;padding:40px;}
+header{width:120px;height:120px;margin:0 auto 20px;border-radius:50%;overflow:hidden;position:relative;border:3px solid #00ff9c;}
+header img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.online-indicator{position:absolute;bottom:8px;right:8px;width:18px;height:18px;background:#00ff9c;border:2px solid #111;border-radius:50%;box-shadow:0 0 6px #00ff9c;}
+button{padding:14px 25px;font-size:18px;background:#ff2e63;color:white;border:none;border-radius:8px;cursor:pointer;margin-top:20px;opacity:0;transform:scale(0.9);transition:0.4s;}
+button.show{opacity:1;transform:scale(1);}
+#typing,#chat,#casinoPopup,#newMsgNotice{display:none;margin-top:30px;}
+#newMsgNotice{position:fixed;top:-60px;left:50%;transform:translateX(-50%);background:#ff2e63;color:white;padding:10px 20px;border-radius:20px;font-size:14px;transition:0.4s;z-index:1000;}
+.message{background:#222;padding:12px;border-radius:10px;margin:10px auto;max-width:300px;opacity:0;transform:translateY(10px);animation:msgFade 0.6s forwards;position:relative;}
+.message:after{content:"";position:absolute;left:-8px;top:10px;width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-right:8px solid #222;}
+@keyframes msgFade{to{opacity:1;transform:translateY(0);}}
+.online{color:#00ff9c;margin-top:10px;}
+#casinoPopup{position:fixed;bottom:20px;right:20px;background:#222;padding:15px 25px;border-radius:12px;cursor:pointer;display:none;}
+.typingDots{display:flex;justify-content:center;gap:6px;margin-top:10px;}
+.typingDots span{width:8px;height:8px;background:#aaa;border-radius:50%;animation:typing 1.4s infinite;}
+.typingDots span:nth-child(2){animation-delay:0.2s;}
+.typingDots span:nth-child(3){animation-delay:0.4s;}
+@keyframes typing{0%{opacity:0.2;transform:translateY(0);}50%{opacity:1;transform:translateY(-4px);}100%{opacity:0.2;transform:translateY(0);}}
+@keyframes pulseButton{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
 </style>
-
 </head>
-
 <body>
 
-<!-- уведомление о новых сообщениях -->
 <div id="newMsgNotice">💬 3 new messages</div>
 
 <header>
-<img id="avatar">
+<img id="avatar" src="">
 <div class="online-indicator"></div>
 </header>
 
 <div class="online" id="onlineUsers"></div>
 
 <div id="typing">
-<div class="typingDots">
-<span></span><span></span><span></span>
-</div>
+<div class="typingDots"><span></span><span></span><span></span></div>
 </div>
 
 <div id="chat">
-
 <div class="message" id="m1"></div>
 <div class="message" id="m2"></div>
 <div class="message" id="m3"></div>
 <div class="message" id="m4"></div>
 <div class="message" id="m5"></div>
-
 <button id="continueBtn">Continue chat</button>
-
 </div>
 
 <div id="casinoPopup">
@@ -212,19 +57,19 @@ animation-delay:0.4s;
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded",()=>{
 
 // ===== ОФФЕРЫ =====
 const DATING="https://kfl2prr.datelovelygirls.com/vv6pzuc?s1=Online24";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
-// ===== RANDOM AVATAR =====
+// ===== AVATAR =====
 let avatarImg=document.getElementById("avatar");
-let avatar =
-"https://randomuser.me/api/portraits/women/" +
-Math.floor(Math.random()*90) +
-".jpg";
-
-avatarImg.src=avatar;
+function loadAvatar(){
+  let randAvatar="https://randomuser.me/api/portraits/women/"+Math.floor(Math.random()*90)+".jpg";
+  avatarImg.src=randAvatar;
+}
+loadAvatar();
 avatarImg.onerror=function(){avatarImg.src="https://randomuser.me/api/portraits/women/45.jpg";};
 
 // ===== ONLINE USERS =====
@@ -233,86 +78,74 @@ let online=document.getElementById("onlineUsers");
 online.innerText=users+" users online";
 
 setInterval(()=>{
-let change=Math.floor(Math.random()*3);
-if(change===0) users++;
-else if(change===1) users--;
-if(users<80) users=80;
-if(users>220) users=220;
-online.innerText=users+" users online";
+  let change=Math.floor(Math.random()*3);
+  if(change===0) users++; else if(change===1) users--;
+  if(users<80) users=80;
+  if(users>220) users=220;
+  online.innerText=users+" users online";
 },4000);
 
 // ===== RANDOM DELAY FUNCTION =====
 function rand(min,max){return Math.floor(Math.random()*(max-min))+min;}
 
-// ===== CHAT SCENARIO =====
+// ===== CHAT =====
 let typing=document.getElementById("typing");
 let chat=document.getElementById("chat");
 let btn=document.getElementById("continueBtn");
-
 typing.style.display="block";
 
 setTimeout(()=>{
-typing.style.display="none";
-chat.style.display="block";
+  typing.style.display="none";
+  chat.style.display="block";
+  document.getElementById("m1").innerText="Hey...";
+  setTimeout(()=>{document.getElementById("m2").innerText="Are you alone?";},rand(900,1600));
+  setTimeout(()=>{document.getElementById("m3").innerText="Let's chat privately...";},rand(1700,2500));
+  setTimeout(()=>{document.getElementById("m4").innerText="Why are you silent? 🙂";},rand(6000,9000));
+  setTimeout(()=>{
+    let texts=["Hey, I'm here too 🙂","Hi... are you looking for someone?","I just joined this chat","Do you want to talk with me?"];
+    document.getElementById("m5").innerText=texts[Math.floor(Math.random()*texts.length)];
+  },rand(9000,13000));
 
-document.getElementById("m1").innerText="Hey...";
-setTimeout(()=>{document.getElementById("m2").innerText="Are you alone?";},rand(900,1600));
-setTimeout(()=>{document.getElementById("m3").innerText="Let's chat privately...";},rand(1700,2500));
-setTimeout(()=>{
-document.getElementById("m4").innerText="Why are you silent? 🙂";
-},rand(6000,9000));
-setTimeout(()=>{
-let texts=[
-"Hey, I'm here too 🙂",
-"Hi... are you looking for someone?",
-"I just joined this chat",
-"Do you want to talk with me?"
-];
-document.getElementById("m5").innerText=texts[Math.floor(Math.random()*texts.length)];
-// меняем аватар
-avatarImg.src="https://randomuser.me/api/portraits/women/"+Math.floor(Math.random()*90)+".jpg";
-},rand(9000,13000));
+  // показываем кнопку
+  setTimeout(()=>{
+    btn.style.display="inline-block";
+    setTimeout(()=>{btn.classList.add("show");},100);
+  },rand(2000,4000));
 
-// показываем кнопку плавно
-setTimeout(()=>{
-btn.style.display="inline-block";
-setTimeout(()=>{btn.classList.add("show");},100);
-},rand(2000,4000));
-
-// ===== ПОДТАЛКИВАЮЩАЯ АНИМАЦИЯ КНОПКИ =====
-setInterval(()=>{
+  // кнопка “подталкивание”
+  setInterval(()=>{
     btn.style.animation="pulseButton 0.6s ease";
     setTimeout(()=>{btn.style.animation="";},600);
-},8000);
+  },8000);
+
+},100);
 
 // ===== ROTATION =====
 btn.onclick=function(){
-var r=Math.random();
-if(r<0.7){window.location.href=DATING;}
-else{window.location.href=CASINO;}
+  var r=Math.random();
+  if(r<0.7) window.location.href=DATING;
+  else window.location.href=CASINO;
 };
 
 // ===== CASINO POPUP =====
 setTimeout(()=>{
-let pop=document.getElementById("casinoPopup");
-pop.style.display="block";
-pop.onclick=function(){window.location.href=CASINO;};
+  let pop=document.getElementById("casinoPopup");
+  pop.style.display="block";
+  pop.onclick=function(){window.location.href=CASINO;};
 },10000);
 
 // ===== NEW MESSAGE NOTICE =====
 setTimeout(()=>{
-let notice=document.getElementById("newMsgNotice");
-notice.style.top="20px";
-setTimeout(()=>{notice.style.top="-60px";},4000);
+  let notice=document.getElementById("newMsgNotice");
+  notice.style.top="20px";
+  setTimeout(()=>{notice.style.top="-60px";},4000);
 },12000);
 
 // ===== ANTI BACK =====
 history.pushState(null,null,location.href);
-window.onpopstate=function(){
-history.pushState(null,null,location.href);
-window.location.href=DATING;
-};
+window.onpopstate=function(){history.pushState(null,null,location.href);window.location.href=DATING;};
 
+});
 </script>
 
 </body>
