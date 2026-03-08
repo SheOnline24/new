@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,6 +91,12 @@ button.show {
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
   border-right: 8px solid #222;
+}
+.translation {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 4px;
+  text-align: left;
 }
 @keyframes msgFade { to { opacity:1; transform:translateY(0); } }
 .online { color: #00ff9c; margin-top: 10px; }
@@ -207,13 +212,7 @@ setInterval(()=>{
 // ===== RANDOM DELAY =====
 function rand(min,max){return Math.floor(Math.random()*(max-min))+min;}
 
-// ===== CHAT ANIMATION =====
-let typing = document.getElementById("typing");
-let chat = document.getElementById("chat");
-let btn = document.getElementById("continueBtn");
-typing.style.display="block";
-chat.style.display="block";
-
+// ===== CHAT ANIMATION + MULTILANGUAGE =====
 const chatTexts = [
   "Hey...",
   "Are you alone?",
@@ -226,18 +225,36 @@ const chatTexts = [
   "Hello! Nice to meet you"
 ];
 
+const languages = ['es','fr','de','zh','hi','ar','ru','pt','ja','it']; // 10 популярных языков
+
+function translateText(text){
+  // Простая имитация перевода: просто добавляем язык код для демонстрации
+  let result = '';
+  for(let lang of languages){
+    result += `[${lang}]: ${text} \n`;
+  }
+  return result;
+}
+
 function showMessage(id, delay){
   setTimeout(()=>{
     let msg=document.getElementById(id);
     msg.style.opacity="0";
     msg.style.animation="none";
     void msg.offsetWidth; // force reflow
-    msg.innerText=chatTexts[Math.floor(Math.random()*chatTexts.length)];
+    let text = chatTexts[Math.floor(Math.random()*chatTexts.length)];
+    msg.innerHTML = text + '<div class="translation">'+translateText(text)+'</div>';
     msg.style.animation="msgFade 0.6s forwards";
   }, delay);
 }
 
 // Показываем сообщения после печати
+let typing = document.getElementById("typing");
+let chat = document.getElementById("chat");
+let btn = document.getElementById("continueBtn");
+typing.style.display="block";
+chat.style.display="block";
+
 setTimeout(()=>{
   typing.style.display="none";
   showMessage("m1", 0);
@@ -264,7 +281,7 @@ btn.onclick=()=>{ if(Math.random()<0.7) window.location.href=DATING; else window
 setTimeout(()=>{
   let pop=document.getElementById("casinoPopup");
   pop.classList.add("show");
-  setTimeout(()=>{pop.classList.add("pulse");},1500);
+  setTimeout(()=>{pop.classList.add("pulse");},500);
   pop.onclick=()=>{ window.location.href=CASINO; };
   document.getElementById("casinoBtn").onclick = (e)=>{
     e.stopPropagation();
@@ -283,6 +300,5 @@ setTimeout(()=>{
 history.pushState(null,null,location.href);
 window.onpopstate=()=>{history.pushState(null,null,location.href); window.location.href=DATING;};
 </script>
-
 </body>
 </html>
