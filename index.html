@@ -72,29 +72,27 @@ setInterval(()=>{
   online.innerText = users + " users online";
 },4000);
 
-// ===== CHAT =====
+// ===== CHAT MESSAGES =====
 const chatContainer = document.getElementById("chat");
 const typingDiv = document.getElementById("typing");
 
-// Сообщения на разных языках
+// Сексуальные / флирт-сообщения на разных языках
 const chatTexts = {
-  en:["Hey...","Are you alone?","Let's chat privately...","Why are you silent? 🙂","Hi, nice to meet you!"],
-  de:["Hey...","Bist du alleine?","Lass uns privat chatten...","Warum schweigst du? 🙂","Hi, schön dich zu treffen!"],
-  es:["Hola...","¿Estás solo?","Hablemos en privado...","¿Por qué estás callado? 🙂","¡Hola, encantado de conocerte!"],
-  fr:["Salut...","Es-tu seul?","Discutons en privé...","Pourquoi es-tu silencieux? 🙂","Salut, ravi de te rencontrer!"],
-  it:["Ciao...","Sei da solo?","Chattiamo in privato...","Perché sei in silenzio? 🙂","Ciao, piacere di conoscerti!"],
-  pt:["Oi...","Você está sozinho?","Vamos conversar em privado...","Por que está em silêncio? 🙂","Oi, prazer em conhecê-lo!"],
-  ru:["Привет...","Ты один?","Давай общаться приватно...","Почему молчишь? 🙂","Привет, рад знакомству!"],
-  zh:["嗨...","你一个人吗？","私聊一下吧...","你怎么不说话？ 🙂","你好，很高兴见到你！"],
-  ja:["こんにちは...","一人ですか？","個別にチャットしましょう...","なぜ黙っているの？ 🙂","こんにちは、はじめまして！"],
-  ar:["مرحباً...","هل أنت وحدك؟","دعنا ندردش بشكل خاص...","لماذا أنت صامت؟ 🙂","مرحباً، سعيد بلقائك!"]
+  en:["Hey sexy... 😉","Can't stop thinking about you 😏","You look amazing tonight 😘","I wish you were here 💋","Your smile drives me crazy 😍"],
+  de:["Hey sexy... 😉","Ich kann nicht aufhören an dich zu denken 😏","Du siehst heute toll aus 😘","Ich wünschte, du wärst hier 💋","Dein Lächeln macht mich verrückt 😍"],
+  es:["Hola sexy... 😉","No puedo dejar de pensar en ti 😏","Te ves increíble esta noche 😘","Ojalá estuvieras aquí 💋","Tu sonrisa me vuelve loco 😍"],
+  fr:["Salut sexy... 😉","Je n’arrête pas de penser à toi 😏","Tu es magnifique ce soir 😘","J’aimerais que tu sois là 💋","Ton sourire me rend fou 😍"],
+  it:["Ciao sexy... 😉","Non smetto di pensarti 😏","Sei stupenda stasera 😘","Vorrei che fossi qui 💋","Il tuo sorriso mi fa impazzire 😍"],
+  pt:["Oi sexy... 😉","Não consigo parar de pensar em você 😏","Você está incrível hoje 😘","Queria que você estivesse aqui 💋","Seu sorriso me deixa louco 😍"],
+  ru:["Привет, красотка... 😉","Не могу перестать думать о тебе 😏","Ты сегодня потрясающая 😘","Хотел бы, чтобы ты была здесь 💋","Твоя улыбка сводит с ума 😍"],
+  zh:["嗨性感... 😉","我一直想着你 😏","你今晚太美了 😘","希望你在这里 💋","你的笑容让我疯狂 😍"],
+  ja:["こんにちはセクシー... 😉","あなたのことが頭から離れない 😏","今夜あなたは素晴らしい 😘","ここにいてほしい 💋","あなたの笑顔に夢中 😍"],
+  ar:["مرحبا جميل... 😉","لا أستطيع التوقف عن التفكير بك 😏","تبدو مذهلًا الليلة 😘","أتمنى لو كنت هنا 💋","ابتسامتك تجعلني مجنون 😍"]
 };
 
-// Определяем язык пользователя
 let userLang = navigator.language.slice(0,2);
 if(!chatTexts[userLang]) userLang="en";
 
-// Генерируем 1–2 сообщения случайных, без повторов
 let usedMsgs = new Set();
 let maxMsgs = 2;
 
@@ -119,9 +117,8 @@ function addMessage() {
     chatContainer.scrollTop = chatContainer.scrollHeight;
 
     if(usedMsgs.size < maxMsgs){
-      setTimeout(addMessage, 1200 + Math.random()*800);
+      setTimeout(addMessage, 1000 + Math.random()*1000);
     } else {
-      // кнопка после сообщений
       let btn = document.createElement("button");
       btn.id = "continueBtn";
       btn.innerText = "Continue chat";
@@ -132,7 +129,6 @@ function addMessage() {
   }, 800 + Math.random()*700);
 }
 
-// Стартуем чат
 setTimeout(addMessage,2000);
 
 // ===== CASINO POPUP =====
