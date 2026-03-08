@@ -14,7 +14,7 @@ background:#0e1621;
 color:white;
 }
 
-/* TOP */
+/* TOP BAR */
 
 .topbar{
 display:flex;
@@ -56,7 +56,7 @@ color:#aaa;
 
 #chat{
 padding:15px;
-margin-bottom:120px;
+margin-bottom:110px;
 }
 
 .msg{
@@ -66,12 +66,6 @@ border-radius:10px;
 margin:8px 0;
 max-width:240px;
 animation:fade .4s;
-}
-
-.msg img{
-width:100%;
-border-radius:10px;
-margin-top:5px;
 }
 
 @keyframes fade{
@@ -100,7 +94,7 @@ text-align:center;
 
 button{
 
-padding:15px 34px;
+padding:14px 30px;
 font-size:18px;
 border:none;
 border-radius:30px;
@@ -125,7 +119,7 @@ display:none;
 
 }
 
-/* HEART */
+/* HEART ANIMATION */
 
 .heart{
 position:fixed;
@@ -135,13 +129,16 @@ animation:heartUp 2s linear forwards;
 }
 
 @keyframes heartUp{
+
 0%{opacity:1;transform:translateY(0)}
 100%{opacity:0;transform:translateY(-120px)}
+
 }
 
 /* NOTIFY */
 
 #notify{
+
 position:fixed;
 top:20px;
 right:20px;
@@ -150,6 +147,7 @@ padding:10px 15px;
 border-radius:8px;
 font-size:14px;
 display:none;
+
 }
 
 /* CASINO */
@@ -180,9 +178,11 @@ animation:casinoPulse 2s infinite;
 }
 
 @keyframes casinoPulse{
+
 0%{transform:scale(1)}
 50%{transform:scale(1.08)}
 100%{transform:scale(1)}
+
 }
 
 </style>
@@ -213,7 +213,7 @@ animation:casinoPulse 2s infinite;
 <button id="btn">Continue chat ❤️</button>
 </div>
 
-<div id="notify">💬 2 new messages</div>
+<div id="notify">💬 New message</div>
 
 <div id="casino">🎰 100% Casino Bonus</div>
 
@@ -227,7 +227,6 @@ const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 /* AVATAR */
 
 let avatarId=Math.floor(Math.random()*90);
-
 document.getElementById("avatar").src="https://randomuser.me/api/portraits/women/"+avatarId+".jpg";
 
 /* NAMES */
@@ -238,29 +237,61 @@ let girl=names[Math.floor(Math.random()*names.length)];
 
 document.getElementById("name").innerText=girl;
 
-/* ONLINE */
+/* ONLINE USERS */
 
 let online=Math.floor(Math.random()*240)+180;
 
 document.getElementById("onlineCount").innerText=online+" users online";
 
-/* CHAT */
+/* LANGUAGE */
+
+let lang=navigator.language.slice(0,2);
+
+/* DIALOGS */
+
+const dialogs={
+
+en:[
+
+["Hey 😉","I saw you here...","Are you alone tonight?"],
+
+["Hi... you look interesting 😘","Where are you from?","Want to chat privately?"],
+
+["Hey handsome 😏","I was checking your profile","Can we talk in private?"]
+
+],
+
+ru:[
+
+["Привет 😉","Я тебя здесь заметила","Ты один сегодня?"],
+
+["Привет 😘","Ты выглядишь интересно","Хочешь пообщаться?"],
+
+["Хей 😏","Мне понравился твой профиль","Пойдём в приват?"]
+
+]
+
+};
+
+if(!dialogs[lang]) lang="en";
+
+let msgs=dialogs[lang][Math.floor(Math.random()*dialogs[lang].length)];
 
 let chat=document.getElementById("chat");
 let typing=document.getElementById("typing");
 let btn=document.getElementById("btn");
 
-function msg(t){
+function addMsg(t){
 
 let d=document.createElement("div");
 d.className="msg";
-d.innerHTML=t;
+d.innerText=t;
 
 chat.appendChild(d);
 
 }
 
-/* START CHAT */
+/* CHAT */
 
 function start(){
 
@@ -269,7 +300,7 @@ typing.style.display="block";
 setTimeout(()=>{
 
 typing.style.display="none";
-msg("Hey 😉");
+addMsg(msgs[0]);
 
 setTimeout(()=>{
 
@@ -278,7 +309,7 @@ typing.style.display="block";
 setTimeout(()=>{
 
 typing.style.display="none";
-msg("I saw you here...");
+addMsg(msgs[1]);
 
 setTimeout(()=>{
 
@@ -287,32 +318,9 @@ typing.style.display="block";
 setTimeout(()=>{
 
 typing.style.display="none";
-msg("You look interesting 😘");
-
-setTimeout(()=>{
-
-typing.style.display="block";
-
-setTimeout(()=>{
-
-typing.style.display="none";
-
-msg('Look at me 😏 <img src="https://randomuser.me/api/portraits/women/'+avatarId+'.jpg">');
-
-setTimeout(()=>{
-
-typing.style.display="block";
-
-setTimeout(()=>{
-
-typing.style.display="none";
-msg("Do you want to chat privately? ❤️");
+addMsg(msgs[2]);
 
 btn.style.display="inline-block";
-
-},1200);
-
-},1600);
 
 },1200);
 
@@ -343,6 +351,7 @@ btn.addEventListener("mouseover",()=>{
 for(let i=0;i<3;i++){
 
 let h=document.createElement("div");
+
 h.className="heart";
 h.innerText="❤️";
 
@@ -364,7 +373,7 @@ document.getElementById("notify").style.display="block";
 
 },3500);
 
-/* CASINO */
+/* CASINO AFTER 12s */
 
 setTimeout(()=>{
 
