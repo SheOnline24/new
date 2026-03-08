@@ -14,31 +14,27 @@ background:#0e1621;
 color:white;
 }
 
-.topbar{
+/* TOP BAR */
 
+.topbar{
 display:flex;
 align-items:center;
 padding:12px;
 background:#17212b;
-
 }
 
 .avatar{
-
 width:45px;
 height:45px;
 border-radius:50%;
 overflow:hidden;
 margin-right:10px;
-
 }
 
 .avatar img{
-
 width:100%;
 height:100%;
 object-fit:cover;
-
 }
 
 .name{
@@ -51,22 +47,20 @@ font-size:12px;
 color:#5cff7a;
 }
 
+/* CHAT */
+
 #chat{
-
 padding:15px;
-margin-bottom:80px;
-
+margin-bottom:100px;
 }
 
 .msg{
-
 background:#182533;
 padding:10px 14px;
 border-radius:10px;
 margin:8px 0;
 max-width:240px;
-animation:fade 0.4s;
-
+animation:fade .4s;
 }
 
 @keyframes fade{
@@ -81,30 +75,54 @@ display:none;
 padding:0 15px;
 }
 
-.bottom{
+/* BUTTON */
 
+.bottom{
 position:fixed;
 bottom:0;
 left:0;
 width:100%;
 background:#17212b;
-padding:10px;
+padding:14px;
 text-align:center;
-
 }
+
+/* АНИМИРОВАННАЯ КНОПКА */
 
 button{
 
-padding:12px 22px;
-background:#ff2e63;
-color:white;
+padding:14px 28px;
+font-size:18px;
 border:none;
-border-radius:8px;
-font-size:16px;
+border-radius:30px;
 cursor:pointer;
+color:white;
+
+background:linear-gradient(45deg,#ff2e63,#ff7a18);
+
+box-shadow:0 0 15px rgba(255,46,99,0.7);
+
+animation:pulse 1.6s infinite;
+
 display:none;
 
 }
+
+@keyframes pulse{
+
+0%{transform:scale(1);box-shadow:0 0 10px rgba(255,46,99,0.5);}
+50%{transform:scale(1.08);box-shadow:0 0 25px rgba(255,46,99,1);}
+100%{transform:scale(1);box-shadow:0 0 10px rgba(255,46,99,0.5);}
+
+}
+
+button:hover{
+
+transform:scale(1.15);
+
+}
+
+/* NOTIFY */
 
 #notify{
 
@@ -119,14 +137,16 @@ display:none;
 
 }
 
+/* CASINO */
+
 #casino{
 
 position:fixed;
-bottom:90px;
+bottom:100px;
 right:20px;
 background:#ff2e63;
-padding:10px 14px;
-border-radius:8px;
+padding:12px 16px;
+border-radius:10px;
 cursor:pointer;
 display:none;
 
@@ -156,7 +176,7 @@ display:none;
 <div id="typing">typing...</div>
 
 <div class="bottom">
-<button id="btn">Continue chat</button>
+<button id="btn">Continue chat ❤️</button>
 </div>
 
 <div id="notify">💬 New message</div>
@@ -165,6 +185,8 @@ display:none;
 
 <script>
 
+/* ССЫЛКИ */
+
 const DATING="https://kfl2prr.datelovelygirls.com/vv6pzuc?s1=Online24";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
@@ -172,12 +194,13 @@ const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 /* АВАТАР */
 
 let avatarId=Math.floor(Math.random()*90);
+
 document.getElementById("avatar").src="https://randomuser.me/api/portraits/women/"+avatarId+".jpg";
 
 
 /* ИМЕНА */
 
-const names=["Anna","Lena","Sofia","Emma","Mila","Julia","Laura","Nina","Sara"];
+const names=["Anna","Mila","Sofia","Emma","Lena","Julia","Sara","Laura","Nina"];
 
 let girl=names[Math.floor(Math.random()*names.length)];
 
@@ -189,42 +212,43 @@ document.getElementById("name").innerText=girl;
 let lang=navigator.language.slice(0,2);
 
 
-/* ДИАЛОГ */
+/* ДИАЛОГИ */
 
-const dialog={
+const dialogs={
 
 en:[
-"Hey 😉",
-"I saw you here...",
-"Do you want to chat privately?"
-],
 
-de:[
-"Hey 😉",
-"Ich habe dich hier gesehen...",
-"Willst du privat chatten?"
-],
+["Hey 😉","I saw you here...","Are you alone tonight?"],
 
-es:[
-"Hola 😉",
-"Te vi aquí...",
-"¿Hablamos en privado?"
+["Hi... you look interesting 😘","Where are you from?","Want to chat privately?"],
+
+["Hey handsome 😏","I was checking your profile","Can we talk in private?"]
+
 ],
 
 ru:[
-"Привет 😉",
-"Я тебя здесь заметила...",
-"Хочешь пообщаться приватно?"
+
+["Привет 😉","Я тебя здесь заметила","Ты один сегодня?"],
+
+["Привет 😘","Ты выглядишь интересно","Хочешь пообщаться?"],
+
+["Хей 😏","Мне понравился твой профиль","Пойдём в приват?"]
+
 ]
 
 };
 
-if(!dialog[lang]) lang="en";
+if(!dialogs[lang]) lang="en";
 
-let msgs=dialog[lang];
+/* СЛУЧАЙНЫЙ ДИАЛОГ */
+
+let msgs=dialogs[lang][Math.floor(Math.random()*dialogs[lang].length)];
+
 
 let chat=document.getElementById("chat");
+
 let typing=document.getElementById("typing");
+
 let btn=document.getElementById("btn");
 
 
